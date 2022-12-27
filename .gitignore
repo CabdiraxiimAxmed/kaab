@@ -1,0 +1,4 @@
+node_modules
+process.org
+package-lock.json
+.env
