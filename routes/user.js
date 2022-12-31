@@ -27,14 +27,14 @@ router.post('/signup', async (req, res) => {
 });
 
 // singin --> find user by username
-router.post('/singin', async (req, res) => {
+router.post('/signin', async (req, res) => {
   let { username, password } = req.body;
   try {
     const user = await client.query(
       `SELECT username, password FROM user_info WHERE username='${username}' `
     );
     if (user.rowCount <= 0) {
-      res.send('acount-not-found');
+      res.send('account-not-found');
       return;
     }
     // unhash password
@@ -43,7 +43,7 @@ router.post('/singin', async (req, res) => {
     if (isMatched(unhashedPassword, password)) {
       res.send('success');
     } else {
-      res.send('passoword-not-matched');
+      res.send('password-not-matched');
     }
   } catch (err) {
     console.log(err);
