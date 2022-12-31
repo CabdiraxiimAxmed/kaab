@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 type Data = {
-  name: string;
   username: string;
-  email: string;
   password: string;
 };
-const signup: React.FC = () => {
+const login: React.FC = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState<Data>({
-    name: '',
     username: '',
-    email: '',
     password: '',
   });
 
@@ -22,21 +20,20 @@ const signup: React.FC = () => {
     setData({ ...data, [name]: value });
   };
   const handleClick = () => {
-    if (!data.name || !data.username || !data.email || !data.password) {
+    if (!data.username || !data.password) {
       toast('fadlan buuxi xogta');
       return;
     }
-    if (data.password.length < 6) {
-      toast('passwordka wuu yaryahay');
-      return;
-    }
+
     axios
-      .post('api/users/signup', data)
+      .post('api/users/signin', data)
       .then(resp => {
         if (resp.data == 'success') {
-          toast('waa lagu guuleystay');
-        } else if (resp.data === 'account-exist') {
-          toast('account exist');
+          navigate('/home');
+        } else if (resp.data == 'account-not-found') {
+          toast('cinwaanka ma abuurno');
+        } else if (resp.data == 'password-not-matched') {
+          toast('passwordka waa qalad');
         } else if (resp.data == 'error') {
           toast('qalad ayaa dhacay');
         }
@@ -61,24 +58,11 @@ const signup: React.FC = () => {
         theme="dark"
       />
       <div className="inner-container">
-        <h1 className="form-title">Singup</h1>
-        <input
-          className="form-input"
-          placeholder="magaca"
-          name="name"
-          onChange={handleChange}
-        />
+        <h1 className="form-title">Singin</h1>
         <input
           className="form-input"
           placeholder="username"
           name="username"
-          onChange={handleChange}
-        />
-        <input
-          className="form-input"
-          type="email"
-          placeholder="email"
-          name="email"
           onChange={handleChange}
         />
         <input
@@ -96,4 +80,4 @@ const signup: React.FC = () => {
   );
 };
 
-export default signup;
+export default login;
