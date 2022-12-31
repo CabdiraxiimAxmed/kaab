@@ -1,0 +1,39 @@
+.singup-container {
+  width: 100vw;
+  height: 100vh;
+}
+
+.singup-container .inner-container {
+  background-color: rgba(0, 0, 0, 0.024);
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24rem;
+  height: 14rem;
+  padding: 5px;
+}
+.singup-container .inner-container .form-title {
+  font-family: 'Ubuntu Mono';
+  margin-left: 8rem;
+}
+.form-input {
+  font-size: 18px;
+  padding: 5px;
+  margin-left: 4rem;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 0.2px solid rgba(0, 0, 0, 0.24);
+}
+.form-submit-button {
+  display: block;
+  margin-left: 6rem;
+  margin-top: 5px;
+  width: 12rem;
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  height: 2rem;
+}
