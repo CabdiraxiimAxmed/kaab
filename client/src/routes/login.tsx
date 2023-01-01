@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../features/user';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 type Data = {
@@ -9,6 +11,7 @@ type Data = {
 };
 const login: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [data, setData] = useState<Data>({
     username: '',
     password: '',
@@ -28,19 +31,19 @@ const login: React.FC = () => {
     axios
       .post('api/users/signin', data)
       .then(resp => {
-        if (resp.data == 'success') {
+        if (typeof resp.data == 'object') {
+          dispatch(setUser(resp.data));
           navigate('/home');
         } else if (resp.data == 'account-not-found') {
-          toast('cinwaanka ma abuurno');
+          toast.error('cinwaanka ma abuurno');
         } else if (resp.data == 'password-not-matched') {
-          toast('passwordka waa qalad');
+          toast.error('passwordka waa qalad');
         } else if (resp.data == 'error') {
-          toast('qalad ayaa dhacay');
+          toast.error('qalad ayaa dhacay');
         }
       })
       .catch(err => {
-        console.log('error happened');
-        console.log(err.message);
+        toast.error('qalad ayaa dhacay');
       });
   };
   return (

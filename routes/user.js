@@ -2,9 +2,6 @@ const router = require('express').Router();
 const CryptoJS = require('crypto-js');
 const client = require('../models/connect');
 
-router.get('/', (req, res) => {
-  res.send('Hello world');
-});
 router.post('/signup', async (req, res) => {
   let { name, username, email, password } = req.body;
   password = CryptoJS.AES.encrypt(password, 'fza').toString();
@@ -26,7 +23,6 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// singin --> find user by username
 router.post('/signin', async (req, res) => {
   let { username, password } = req.body;
   try {
@@ -41,7 +37,11 @@ router.post('/signin', async (req, res) => {
     var bytes = CryptoJS.AES.decrypt(user.rows[0].password, 'fza');
     var unhashedPassword = bytes.toString(CryptoJS.enc.Utf8);
     if (isMatched(unhashedPassword, password)) {
-      res.send('success');
+      res.send({
+        name: user.rows[0].name,
+        username: user.rows[0].username,
+        email: user.rows[0].email,
+      });
     } else {
       res.send('password-not-matched');
     }
@@ -57,7 +57,11 @@ router.get('/find/:username', async (req, res) => {
     const user = await client.query(
       `SELECT name, username, email FROM user_info WHERE username='${username}'`
     );
-    res.send(user.rows[0]);
+    res.send({
+      name: user.rows[0].name,
+      username: user.rows[0].username,
+      email: user.rows[0].email,
+    });
   } catch (err) {
     res.send('error');
   }

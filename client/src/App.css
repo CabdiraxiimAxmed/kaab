@@ -37,3 +37,26 @@
   border-radius: 5px;
   height: 2rem;
 }
+
+/* Header file */
+.header {
+  height: 4rem;
+  background-color: rgba(0, 0, 0, 0.074);
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  align-items: center;
+}
+.logo {
+  font-size: 23px;
+}
+.menu a {
+  font-size: 23px;
+}
+/* Home file  */
+.question-links-container {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30rem;
+}
