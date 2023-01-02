@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
+import QuestionLinks from '../Components/QuestionLinks';
 import { useNavigate } from 'react-router-dom';
 
 type Question = {
@@ -9,6 +10,7 @@ type Question = {
   folder: string;
   file: string;
   level: string;
+  question: string;
 };
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -19,6 +21,7 @@ const Home: React.FC = () => {
       folder: '',
       file: '',
       level: '',
+      question: '',
     },
   ]);
   useEffect(() => {
@@ -37,7 +40,7 @@ const Home: React.FC = () => {
   }, []);
 
   const handleClick = (id: number) => {
-    navigate(`/problems/${id}`);
+    navigate(`/problem/${id}`);
   };
 
   return (
@@ -54,28 +57,37 @@ const Home: React.FC = () => {
         pauseOnHover
         theme="dark"
       />
-      <div className="question-links-container">
-        <table>
-          <thead>
-            <tr>
-              <th>id</th>
-              <th>magaca</th>
-              <th>heerka</th>
-            </tr>
-          </thead>
-          {questions.map((question: Question, index: number) => (
-            <tbody onClick={() => handleClick(question.id)}>
-              <tr>
-                <td>{question.id}</td>
-                <td>{question.name}</td>
-                <td>{question.level}</td>
-              </tr>
-            </tbody>
-          ))}
-        </table>
-      </div>
+      {questions.length >= 1 && <CountQuestionLevels questions={questions} />}
+      {questions.length >= 1 && <QuestionLinks questions={questions} />}
+      <div className="question-links-container"></div>
     </>
   );
 };
 
+interface CountQuestionLevelsProb {
+  questions: Question[];
+}
+const CountQuestionLevels: React.FC<CountQuestionLevelsProb> = ({
+  questions,
+}) => {
+  let easy: number = questions.filter(
+    (question: Question) => question.level == 'fudeed'
+  ).length;
+  let medium: number = questions.filter(
+    (question: Question) => question.level == 'dhexaad'
+  ).length;
+  let hard: number = questions.filter(
+    (question: Question) => question.level == 'adeeg'
+  ).length;
+  return (
+    <div className="question-levels-counter-container">
+      <h2>Tirada heerarka</h2>
+      <span className="easy-counter-container">{easy} fudeed</span>
+      <span className="medium-counter-container">{medium} dhexaad</span>
+      <span className="hard-counter-container">{hard} adeeg</span>
+    </div>
+  );
+};
+
 export default Home;
+export type { Question };
