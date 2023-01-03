@@ -3,7 +3,7 @@
  * @param {number} nam2
  * @return {number}
  */
-function sum(nam1, nam2) {
+function sum(tiro1, tiro2) {
   // Halkaan ku qor code ka
   return null;
 }
