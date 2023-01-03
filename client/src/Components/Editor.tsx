@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaJsSquare } from 'react-icons/fa';
+import io from 'socket.io-client';
 import CodeEditor from '@monaco-editor/react';
 
 interface Props {
@@ -7,6 +8,12 @@ interface Props {
   file: string;
 }
 const Editor: React.FC<Props> = ({ code, file }) => {
+  useEffect(() => {
+    let socket = io('http://localhost:2321/', {
+      transports: ['websocket'],
+    });
+    socket.emit('message', 'Hello world');
+  }, []);
   function handleEditorChange(value, event) {
     console.log('here is the current model value:', value);
   }
