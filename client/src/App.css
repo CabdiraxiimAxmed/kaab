@@ -145,8 +145,16 @@
   height: 2rem;
   display: flex;
   align-items: center;
-  padding-left: 3px;
+  /* padding-left: 3px; */
   border-bottom: 1px solid #d9d9d9;
+}
+.file-name-container {
+  height: 100%;
+  padding: 0 5px;
+  padding-top: 3px;
+  transform: translateY(1px);
+  border-right: 1px solid #d9d9d9;
+  border-bottom: 1px solid white;
 }
 .file-icon * {
   color: rgb(185, 185, 6) !important;
