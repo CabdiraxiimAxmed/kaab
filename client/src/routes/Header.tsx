@@ -19,7 +19,9 @@ const Header: React.FC = () => {
           dispatch(setUser(resp.data));
         }
       })
-      .catch(err => {});
+      .catch(err => {
+        toast.error(err.message);
+      });
   }, []);
   return (
     <>

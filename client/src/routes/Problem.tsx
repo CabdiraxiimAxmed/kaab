@@ -56,7 +56,13 @@ const Problem: React.FC = () => {
       />
       <div className="question-editor-result-container">
         {problem.readMe && <QuestionText questionText={problem.readMe} />}
-        {problem.code && <Editor code={problem.code} file={problem.file} />}
+        {problem.code && (
+          <Editor
+            preWrittenCode={problem.code}
+            file={problem.file}
+            folder={problem.folder}
+          />
+        )}
         <Result />
       </div>
     </>
