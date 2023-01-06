@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import moment from 'moment';
 import { SocketContext, Value } from '../app/Socket';
 
 const Result: React.FC = () => {
@@ -14,7 +15,8 @@ const Result: React.FC = () => {
 
   useEffect(() => {
     socket.on('codeResult', (result: string) => {
-      let socketCodeResult = { result: result, time: '09:18:18' };
+      let time = moment().format('hh:mm:ss');
+      let socketCodeResult = { result, time };
       setCodeResult([...codeResult, socketCodeResult]);
     });
   }, [socket, codeResult]);
