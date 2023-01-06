@@ -5,7 +5,6 @@ import socketReducer from '../features/socket';
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    socket: socketReducer,
   },
 });
 
