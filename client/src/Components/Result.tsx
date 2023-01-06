@@ -15,11 +15,9 @@ const Result: React.FC = () => {
   useEffect(() => {
     socket.on('codeResult', (result: string) => {
       let socketCodeResult = { result: result, time: '09:18:18' };
-      let test = [...codeResult, socketCodeResult];
-      console.log({ test });
-      setCodeResult(test);
+      setCodeResult([...codeResult, socketCodeResult]);
     });
-  }, [socket]);
+  }, [socket, codeResult]);
 
   return (
     <div className="result-container">
