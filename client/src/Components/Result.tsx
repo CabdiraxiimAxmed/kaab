@@ -21,10 +21,17 @@ const Result: React.FC = () => {
     });
   }, [socket, codeResult]);
 
+  const clearResult = () => {
+    setCodeResult([{ result: '', time: '' }]);
+  };
+
   return (
     <div className="result-container">
       <div className="result-header">
         <p>Natiijada</p>
+        <button onClick={clearResult} className="result-clear-button">
+          Tir
+        </button>
       </div>
       {codeResult.map((result: any, index: number) => (
         <div className="code-results-container">

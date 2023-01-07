@@ -194,6 +194,7 @@
   height: 2rem;
   margin-left: 3px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #d9d9d9;
 }
@@ -206,4 +207,13 @@
 }
 .result-time-display {
   color: #bdbdbd;
+}
+.result-clear-button {
+  margin-right: 15px;
+  padding: 0px 10px;
+  border: none;
+  color: rgb(255, 243, 237);
+  background-color: #fc9263;
+  border-radius: 5px;
+  cursor: pointer;
 }
