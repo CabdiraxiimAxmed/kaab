@@ -34,6 +34,11 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder }) => {
     let language = 'javascript';
     socket.emit('runCode', { code, file, folder, language, username });
   };
+  const testCode = () => {
+    let username = 'abdi';
+    let language = 'javascript';
+    socket.emit('testCode', { code, file, folder, language, username });
+  };
 
   return (
     <div className="editor-container">
@@ -53,7 +58,9 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder }) => {
         <button className="run" onClick={runCode}>
           Run
         </button>
-        <button className="test">Test</button>
+        <button onClick={testCode} className="test">
+          Test
+        </button>
       </div>
     </div>
   );
