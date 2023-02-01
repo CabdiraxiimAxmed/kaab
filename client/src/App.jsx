@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Singup from './routes/signup';
 import Login from './routes/login';
+import PageNotFound from './routes/PageNotFound';
 import Home from './routes/Home';
 import Header from './routes/Header';
 import { setSocket } from './features/socket';
@@ -30,6 +31,7 @@ function App() {
         <Route path="/singup" element={<Singup />} />
         <Route path="/singin" element={<Login />} />
         <Route path="/problem/:id" element={<Problem />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Router>
   );
