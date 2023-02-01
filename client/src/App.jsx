@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import Singup from './routes/signup';
 import Login from './routes/login';
 import PageNotFound from './routes/PageNotFound';
+import ProtectedRoute from './routes/ProtectedRoute';
 import Home from './routes/Home';
 import Header from './routes/Header';
-import { setSocket } from './features/socket';
 import { useDispatch } from 'react-redux';
 import Problem from './routes/Problem';
 import io from 'socket.io-client';
@@ -17,21 +17,18 @@ function App() {
     let socket = io('http://localhost:2321/', {
       transports: ['websocket'],
     });
-    socket.on('message', message => {
-      if (message === 'connected') {
-        dispatch(setSocket(socket));
-      }
-    });
   }, []);
   return (
     <Router>
       <Header />
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route path="/signin" element={<Login />} />
         <Route path="/singup" element={<Singup />} />
-        <Route path="/singin" element={<Login />} />
-        <Route path="/problem/:id" element={<Problem />} />
-        <Route path="*" element={<PageNotFound />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/problem/:id" element={<Problem />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Route>
       </Routes>
     </Router>
   );

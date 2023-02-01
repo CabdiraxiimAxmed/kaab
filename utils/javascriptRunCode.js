@@ -3,19 +3,19 @@ const Docker = require('dockerode');
 const docker = new Docker();
 
 const javascriptRunCode = codeData => {
-  console.log('received the code again');
   const { username, language, folder } = codeData;
   const existedContainer = docker.getContainer(
     `${username}_${language}_${folder}`
   );
   existedContainer.inspect((err, result) => {
+    // console.log(result);
     if (err) {
       createContainer(codeData);
       return;
     } else if (result.State.Running) {
       copyFiles(existedContainer, codeData);
       return;
-    } else if (result.State.Status == 'created' && !result.State.Running) {
+    } else if ((result.State.Status == 'created' || result.State.Status == 'exited')&& !result.State.Running) {
       startContainer(existedContainer, codeData);
     }
   });
@@ -45,7 +45,7 @@ const createContainer = codeData => {
         console.log('error on creating starting');
         return;
       }
-      console.log({ folder });
+      
       container.putArchive(
         `./exercises/javascript/${folder}.tar`,
         {

@@ -120,8 +120,6 @@ function isJson(str) {
   }
 }
 const getMessages = result => {
-  console.log({ result });
-  console.log('formatting error messages');
   let received = '';
   let expected = '';
   let errorOutput = [];

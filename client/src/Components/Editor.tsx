@@ -30,14 +30,12 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder }) => {
     setCode(value);
   }
   const runCode = () => {
-    let username = 'abdi';
     let language = 'javascript';
-    socket.emit('runCode', { code, file, folder, language, username });
+    socket.emit('runCode', { code, file, folder, language, username: user.username });
   };
   const testCode = () => {
-    let username = 'abdi';
     let language = 'javascript';
-    socket.emit('testCode', { code, file, folder, language, username });
+    socket.emit('testCode', { code, file, folder, language, username: user.username });
   };
 
   return (

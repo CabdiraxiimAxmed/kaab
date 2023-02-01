@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const fs = require('fs');
+const { format } = require('path');
 const path = require('path');
 const client = require('../models/connect');
 
@@ -75,17 +76,17 @@ const getDescription = file => {
 };
 
 // add question
-const addQuestion = async () => {
-  try {
-    await client.query(`INSERT INTO questions (name, folder, file, level)
-    VALUES('Ma simanyihiin bracketyada', 'matchBrackets', 'matchBrackets', 'adeeg');
-    `);
-    console.log('created question');
-  } catch (err) {
-    console.log(err);
-  }
-};
+// const addQuestion = async () => {
+//   try {
+//     await client.query(`INSERT INTO questions (name, folder, file, level)
+//     VALUES('Ma simanyihiin bracketyada', 'matchBrackets', 'matchBrackets', 'adeeg');
+//     `);
+//     console.log('created question');
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 
-addQuestion();
+// addQuestion();
 
 module.exports = router;

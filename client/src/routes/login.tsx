@@ -9,7 +9,8 @@ type Data = {
   username: string;
   password: string;
 };
-const login: React.FC = () => {
+const Login: React.FC = () => {
+  console.log('login');
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [data, setData] = useState<Data>({
@@ -42,8 +43,8 @@ const login: React.FC = () => {
           toast.error('qalad ayaa dhacay');
         }
       })
-      .catch(err => {
-        toast.error('qalad ayaa dhacay');
+      .catch(error => {
+        toast.error(error.message);
       });
   };
   return (
@@ -57,7 +58,6 @@ const login: React.FC = () => {
         rtl={false}
         pauseOnFocusLoss={false}
         draggable
-        pauseOnHover
         theme="dark"
       />
       <div className="inner-container">
@@ -65,12 +65,13 @@ const login: React.FC = () => {
         <input
           className="form-input"
           placeholder="username"
+          autoFocus
           name="username"
           onChange={handleChange}
         />
         <input
           className="form-input"
-          type="pasword"
+          type="password"
           name="password"
           placeholder="password"
           onChange={handleChange}
@@ -83,4 +84,4 @@ const login: React.FC = () => {
   );
 };
 
-export default login;
+export default Login;
