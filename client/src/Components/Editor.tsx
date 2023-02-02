@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { SocketContext, Value } from '../app/Socket';
+import { langs } from '@uiw/codemirror-extensions-langs';
 import { FaJsSquare } from 'react-icons/fa';
+import { vim } from '@replit/codemirror-vim';
 import { RootState } from '../app/store';
 import { useSelector } from 'react-redux';
-import CodeEditor from '@monaco-editor/react';
+import Codemirror from '@uiw/react-codemirror';
 
 interface Props {
   preWrittenCode: string;
@@ -22,15 +24,21 @@ type CodeData = {
 const Editor: React.FC<Props> = ({ preWrittenCode, file, folder }) => {
   const { socket } = useContext(SocketContext) as Value;
   const [code, setCode] = useState<string>('');
+  const [extensions] = useState<any[]>([
+    langs.tsx(),
+    vim(),
+  ])
   const user = useSelector((state: RootState) => state.user.value);
   useEffect(() => {
     setCode(preWrittenCode);
   }, [preWrittenCode]);
-  function handleEditorChange(value = '', event: any) {
+  function handleEditorChange(value = '') {
     setCode(value);
   }
   const runCode = () => {
     let language = 'javascript';
+    console.log("run code")
+    console.log({ code, file, folder, language, username: user.username });
     socket.emit('runCode', { code, file, folder, language, username: user.username });
   };
   const testCode = () => {
@@ -45,12 +53,12 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder }) => {
           <FaJsSquare className="file-icon" /> {file}
         </div>
       </div>
-      <CodeEditor
-        height="90vh"
-        defaultLanguage="javascript"
-        defaultValue={code}
-        theme="light"
-        onChange={(value, event) => handleEditorChange(value, event)}
+      <Codemirror
+        value={code}
+        height='90vh'
+        theme='light'
+        extensions={extensions}
+        onChange={(value: string, viewUpdate: any) => handleEditorChange(value)}
       />
       <div className="editor-btns-container">
         <button className="run" onClick={runCode}>
