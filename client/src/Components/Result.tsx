@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import JavascriptFailedMessage from './JavascriptFailedMessage';
 import moment from 'moment';
 import { SocketContext, Value } from '../app/Socket';
@@ -39,7 +40,9 @@ const Result: React.FC = () => {
       setDisplayJavascriptFailedMessage(false);
       setCodeResult(socketCodeResult);
     });
-    socket.on('passed', (passed: boolean) => console.log('passed'));
+    socket.on('passed', (passed: boolean) => {
+      toast.success('Waad ku guuleystay tijaabada.');
+    });
     socket.on(
       'javascriptFailedMessage',
       (result: JavascriptFailedMessageType[]) => {

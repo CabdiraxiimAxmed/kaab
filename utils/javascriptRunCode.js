@@ -70,11 +70,12 @@ const startContainer = (container, codeData) => {
       console.log('error happened on creating container');
       return;
     }
-    copyFiles(codeData);
+    copyFiles(container, codeData);
   });
 };
 
 const copyFiles = (container, codeData) => {
+  console.log(codeData);
   let { code, file, folder } = codeData;
   let execWritingOptions = {
     Cmd: [

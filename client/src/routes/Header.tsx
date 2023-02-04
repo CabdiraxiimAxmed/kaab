@@ -8,21 +8,7 @@ import { setUser } from '../features/user';
 import axios from 'axios';
 
 const Header: React.FC = () => {
-  const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.user.value);
-  useEffect(() => {
-    axios
-      .get('api/users/find/abdi')
-      .then(resp => {
-        if (resp.data == 'error') {
-        } else {
-          dispatch(setUser(resp.data));
-        }
-      })
-      .catch(err => {
-        toast.error(err.message);
-      });
-  }, []);
+  const user = useSelector((state: RootState) => state.user.value); 
 
   return (
     <>
