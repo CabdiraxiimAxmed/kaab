@@ -255,6 +255,54 @@
   color: #00b200;
 }
 
+/* user profile file */
+.user-profile-info-container {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+}
+.user-profile-panel {
+  width: 100%;
+  border-right: 1px solid rgba(0, 0, 0, 0.25);
+  height: 20rem;
+}
+.user-profile-panel button {
+  display: block;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  background-color: transparent;
+  padding: 5px 10px;
+  width: 100%;
+  text-align: left;
+  transition: all .1s linear;
+}
+.user-profile-panel button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.user-profile-content {
+  padding: 10px;
+  width: 100%;
+  height: 20rem;
+}
+
+/* Account file */
+.user-profile-account-container {
+  padding-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-row-gap: 10px;
+}
+.input-container {
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+.input-container input {
+  margin: 0;
+  margin-top: 10px;
+}
+
 /* Page not found file */
 .page-not-found-container {
   position: absolute;

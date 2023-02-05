@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 import { FaUserAlt } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
@@ -9,18 +9,6 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
       <div className="header">
         <a href="#" className="logo">
           kaab
@@ -29,7 +17,7 @@ const Header: React.FC = () => {
           <span>
             <FaUserAlt />
           </span>
-          <a href="#"> {user.username}</a>
+          <Link to="/profile"> {user.username}</Link>
         </div>
       </div>
     </>

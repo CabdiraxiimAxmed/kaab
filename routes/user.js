@@ -26,7 +26,7 @@ router.post('/signin', async (req, res) => {
   let { username, password } = req.body;
   try {
     const user = await client.query(
-      `SELECT username, password FROM user_info WHERE username='${username}' `
+      `SELECT username, password, email, name FROM user_info WHERE username='${username}' `
     );
     if (user.rowCount <= 0) {
       res.send('account-not-found');
@@ -65,7 +65,26 @@ router.get('/find/:username', async (req, res) => {
   }
 });
 
-router.get('/answeredQuestions/:username', async(req, res) => {
+router.post('/update', async(req, res) => {
+  let { name , username, email, oldUsername } = req.body;
+  let newUsername = username;
+  try {
+    if (oldUsername !== newUsername) {
+      const user = await client.query( `SELECT * FROM user_info WHERE username = '${newUsername}'`);
+      if (user.rowCount >= 1) {
+        res.send('username-exist');
+        return;
+      }
+    }
+    await client.query(`UPDATE user_info set name='${name}', email = '${email}', username='${newUsername}' WHERE username='${oldUsername}'`);
+    res.send('success');
+  } catch(err) {
+    console.log(err);
+    res.send('error').end();
+  }
+});
+
+router.get('/answeredQuestions/:userme', async(req, res) => {
   let { username } = req.params;
   try {
     let resp = await client.query(`SELECT answered_questions FROM user_info WHERE username='${username}'`);
