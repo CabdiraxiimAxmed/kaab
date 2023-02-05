@@ -3,9 +3,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import { FaUserAlt } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../features/user';
-import axios from 'axios';
 
 const Header: React.FC = () => {
   const user = useSelector((state: RootState) => state.user.value); 

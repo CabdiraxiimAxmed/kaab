@@ -13,6 +13,7 @@ type ProblemType = {
   readMe: string;
   srcPath: string;
   folder: string;
+  id: number;
 };
 const Problem: React.FC = () => {
   const [problem, setProblem] = useState<ProblemType>({
@@ -22,7 +23,9 @@ const Problem: React.FC = () => {
     readMe: '',
     srcPath: '',
     folder: '',
+    id: 0,
   });
+
   const { id } = useParams();
   useEffect(() => {
     axios
@@ -61,6 +64,7 @@ const Problem: React.FC = () => {
             preWrittenCode={problem.code}
             file={problem.file}
             folder={problem.folder}
+            id={problem.id}
           />
         )}
         <Result />

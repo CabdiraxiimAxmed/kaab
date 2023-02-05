@@ -18,7 +18,6 @@ router.post('/signup', async (req, res) => {
     );
     res.send({ name, username, email, password });
   } catch (err) {
-    console.log(err);
     res.send('error');
   }
 });
@@ -46,7 +45,6 @@ router.post('/signin', async (req, res) => {
       res.send('password-not-matched');
     }
   } catch (err) {
-    console.log(err);
     res.send('error');
   }
 });
@@ -66,6 +64,21 @@ router.get('/find/:username', async (req, res) => {
     res.send('error');
   }
 });
+
+router.get('/answeredQuestions/:username', async(req, res) => {
+  let { username } = req.params;
+  try {
+    let resp = await client.query(`SELECT answered_questions FROM user_info WHERE username='${username}'`);
+    let answeredQuestions = [];
+    if (!resp.rows[0])
+      answeredQuestions = [];
+    else answeredQuestions = resp.rows[0].answered_questions;
+    res.send(answeredQuestions);
+  } catch(err) {
+    res.send('error');
+  }
+});
+
 const isMatched = (passwrd1, passwrd2) => passwrd1 === passwrd2;
 
 module.exports = router;

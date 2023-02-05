@@ -14,6 +14,7 @@ type Question = {
 };
 const Home: React.FC = () => {
   const navigate = useNavigate();
+
   const [questions, setQuestions] = useState<Question[]>([
     {
       id: 0,

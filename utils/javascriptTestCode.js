@@ -77,7 +77,7 @@ EOF
 }
 function testCode(codeData, container) {
   console.log('inside test code function');
-  const { socket } = codeData;
+  const { socket, questionId } = codeData;
   let execWritingOptions = {
     Cmd: ['jest', '--json'],
     AttachStdout: true,
@@ -96,7 +96,7 @@ function testCode(codeData, container) {
           let isPassed = testResult.success;
           if (isPassed) {
             // passedTest
-            socket.emit('passed', true);
+            socket.emit('passed', { questionId });
           } else {
             let warningMessage = testResult.testResults[0].assertionResults;
             const messages = getMessages(warningMessage);

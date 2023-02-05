@@ -11,17 +11,10 @@ interface Props {
   preWrittenCode: string;
   file: string;
   folder: string;
+  id: number;
 }
 
-type CodeData = {
-  code: string;
-  file: string;
-  folder: string;
-  language: string;
-  username: string;
-};
-
-const Editor: React.FC<Props> = ({ preWrittenCode, file, folder }) => {
+const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id }) => {
   const { socket } = useContext(SocketContext) as Value;
   const [code, setCode] = useState<string>('');
   const [extensions] = useState<any[]>([
@@ -37,13 +30,11 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder }) => {
   }
   const runCode = () => {
     let language = 'javascript';
-    console.log("run code")
-    console.log({ code, file, folder, language, username: user.username });
     socket.emit('runCode', { code, file, folder, language, username: user.username });
   };
   const testCode = () => {
     let language = 'javascript';
-    socket.emit('testCode', { code, file, folder, language, username: user.username });
+    socket.emit('testCode', { questionId: id, code, file, folder, language, username: user.username });
   };
 
   return (

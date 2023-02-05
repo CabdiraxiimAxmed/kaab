@@ -1,7 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { RootState } from '../app/store';
+import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 import JavascriptFailedMessage from './JavascriptFailedMessage';
 import moment from 'moment';
+import axios from 'axios';
 import { SocketContext, Value } from '../app/Socket';
 
 type JavascriptFailedMessageType = {
@@ -14,6 +17,7 @@ type CodeResultType = {
   time: string;
 };
 const Result: React.FC = () => {
+  const user = useSelector((state: RootState) => state.user.value);
   const { socket } = useContext(SocketContext) as Value;
   const [codeResult, setCodeResult] = useState<CodeResultType>({
     result: '',
@@ -40,8 +44,17 @@ const Result: React.FC = () => {
       setDisplayJavascriptFailedMessage(false);
       setCodeResult(socketCodeResult);
     });
-    socket.on('passed', (passed: boolean) => {
-      toast.success('Waad ku guuleystay tijaabada.');
+    socket.on('passed', ({ questionId }: {questionId: number}) => {
+      axios.post('/api/questions/answered', { username: user.username, questionId })
+        .then(resp => {
+          if (resp.data === 'error') {
+            toast.error('server error');
+            return;
+          }
+          toast.success('question is stored');
+        }).catch(error => {
+          toast.error(error.message);
+        })
     });
     socket.on(
       'javascriptFailedMessage',

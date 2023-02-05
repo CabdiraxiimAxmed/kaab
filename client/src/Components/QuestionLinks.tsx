@@ -1,15 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { FaCheckSquare } from 'react-icons/fa';
+import { RootState } from '../app/store';
+import { useSelector } from 'react-redux';
 import { Question } from '../routes/Home';
+import axios from 'axios';
 
 interface Props {
   questions: Question[];
 }
 const QuestionLinks: React.FC<Props> = ({ questions }) => {
   const navigate = useNavigate();
+  const [ answeredQuestionIds, setAnsweredQuestionIds] = useState<number[]>([]);
+  let user = useSelector((state: RootState) => state.user.value);
+
+  useEffect(() => {
+    axios.get(`/api/users/answeredQuestions/${user.username}`)
+      .then(resp => {
+        if (resp.data === 'error') {
+          toast.error('SERVER: qalad ayaa dhacay!!');
+          return;
+        }
+        console.log('data');
+        setAnsweredQuestionIds(resp.data);
+      }).catch(error => {
+        toast.error(error.message);
+      })
+  }, [])
+
   const handleClick = (id: number) => {
     navigate(`/problem/${id}`);
   };
+
+  const answered = (id: number): boolean => {
+    if(answeredQuestionIds.indexOf(id) === -1) return false;
+    return true;
+  }
 
   return (
     <div>
@@ -21,8 +48,9 @@ const QuestionLinks: React.FC<Props> = ({ questions }) => {
             key={index}
             onClick={() => handleClick(question.id)}
           >
+            {answered(question.id) && <span className='checked-icon' style={{ marginRight: '10px' }}><FaCheckSquare /></span>}
             <h4 style={{ display: 'inline', marginRight: '20px' }}>
-              {question.id}. {question.name}
+              {index + 1}. {question.name}
             </h4>
             <span className={findLevelClass(question.level)}>
               {question.level}

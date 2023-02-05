@@ -9,12 +9,9 @@ const socketConnection = server => {
   io.on('connection', socket => {
     socket.emit('message', 'connected');
     socket.on('runCode', codeData => {
-      console.log("socket run code")
-      console.log(codeData);
       javascriptRunCode({ ...codeData, socket });
     });
     socket.on('testCode', codeData => {
-      console.log('testing...');
       javascriptTestCode({ ...codeData, socket });
     });
   });

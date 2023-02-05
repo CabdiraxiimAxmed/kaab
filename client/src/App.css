@@ -117,6 +117,10 @@
   left: -2px;
   bottom: 0px;
 }
+.checked-icon * {
+  color: green;
+}
+
 /* problem file */
 .question-editor-result-container {
   display: grid;

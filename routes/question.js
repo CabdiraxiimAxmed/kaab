@@ -13,7 +13,6 @@ router.get('/', async (req, res) => {
     }
     res.send(questions.rows);
   } catch (err) {
-    console.log(err);
     res.send('error');
   }
 });
@@ -28,16 +27,15 @@ router.get('/find/:id', async (req, res) => {
       res.send('question-not-exist');
       return;
     }
-    let { file, folder } = question.rows[0];
-    let code = getJavascript(file, folder);
+    let { file, folder, id: questionId } = question.rows[0];
+    let code = getJavascript(file, folder, questionId);
     res.send(code);
   } catch (err) {
-    console.log(err);
     res.send('error');
   }
 });
 
-const getJavascript = (file, folder) => {
+const getJavascript = (file, folder, id) => {
   const codeFilePath = path.join(
     __dirname,
     `../exercises/javascript/${folder}/${file}.js`
@@ -62,9 +60,29 @@ const getJavascript = (file, folder) => {
       readMe,
       srcPath,
       folder: folderName,
+      id,
     };
   }
 };
+
+router.post('/answered', async(req, res) => {
+  let { questionId, username } = req.body;
+  questionId = parseInt(questionId);
+  try {
+    let resp = await client.query(`SELECT answered_questions FROM user_info WHERE username='${username}'`);
+    let answered_ids = resp.rows[0].answered_questions;
+    let index = -1;
+    if(answered_ids != null)
+      index = answered_ids.indexOf(parseInt(questionId));
+
+    if (index == -1) {
+      await client.query(`UPDATE user_info set answered_questions = ARRAY_APPEND(answered_questions, '${questionId}') WHERE username='${username}'`);
+    }
+    res.send('success').end();
+  } catch(err) {
+    res.send('error').end();
+  }
+});
 
 const getDescription = file => {
   const readMeFilePath = path.join(
