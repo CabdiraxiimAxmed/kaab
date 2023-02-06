@@ -84,6 +84,37 @@ router.post('/update', async(req, res) => {
   }
 });
 
+router.get('/report/:username', async(req, res) => {
+  const { username } = req.params;
+  try {
+    let answeredQuestions = await client.query(`SELECT answered_questions FROM user_info WHERE username='${username}'`);
+    let answered = [];
+    let easy = 0;
+    let medium = 0;
+    let hard = 0;
+    if(!answeredQuestions.rows[0].answered_questions) {
+      answered = [];
+    } else {
+      answered = answeredQuestions.rows[0].answered_questions
+      let levelsContainer = [];
+      for(let i = 0; i < answeredQuestions.rows[0].answered_questions.length; i++) {
+        let id = answeredQuestions.rows[0].answered_questions[i];
+        let questionLevel = await client.query(`SELECT level FROM questions WHERE id='${id}'`);
+        let level = questionLevel.rows[0].level;
+        levelsContainer.push(level);
+      }
+      easy = getLevels(levelsContainer).easy;
+      medium = getLevels(levelsContainer).medium;
+      hard = getLevels(levelsContainer).hard;
+    }
+    answered = answered.length;
+    res.send({ answeredCount: answered, easy, medium, hard }).end();
+  } catch(err) {
+    console.log(err);
+    res.send('error').end();
+  }
+});
+
 router.get('/answeredQuestions/:userme', async(req, res) => {
   let { username } = req.params;
   try {
@@ -97,6 +128,20 @@ router.get('/answeredQuestions/:userme', async(req, res) => {
     res.send('error');
   }
 });
+
+const getLevels = (levelsContainer) => {
+  let easy = levelsContainer.filter(
+    (level) => level == 'fudeed'
+  ).length;
+  let medium = levelsContainer.filter(
+    (level) => level == 'dhexaad'
+  ).length;
+  let hard = levelsContainer.filter(
+    (level) => level == 'adeeg'
+  ).length;
+
+  return { easy, medium, hard };
+}
 
 const isMatched = (passwrd1, passwrd2) => passwrd1 === passwrd2;
 

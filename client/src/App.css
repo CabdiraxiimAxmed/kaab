@@ -285,7 +285,7 @@
   height: 20rem;
 }
 
-/* Account file */
+/* User Account file */
 .user-profile-account-container {
   padding-top: 20px;
   display: grid;
@@ -301,6 +301,41 @@
 .input-container input {
   margin: 0;
   margin-top: 10px;
+}
+
+/* User Report file */
+.user-report-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 10rem;
+}
+.user-report-container .card {
+  width: 20rem;
+  height: 10rem;
+  box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
+}
+
+.user-report-container .card.question-answered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column
+} 
+.user-report-container .card.question-answered-levels {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column
+} 
+
+.user-report-container .card.question-answered-levels span {
+  margin: 7px;
+}
+.user-report-container .card.question-answered p {
+  margin: 3px;
+  font-weight: bold;
 }
 
 /* Page not found file */
