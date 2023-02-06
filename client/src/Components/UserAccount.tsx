@@ -12,8 +12,8 @@ const UserAccount: React.FC = () => {
   const [userData, setUserData] = useState<{[key: string]: string}>(user);
 
   const handleClick =(): void => {
-    if(!userData.name || !user.username || !user.email) {
-      toast('Fadlan xogta dhameestir');
+    if(!userData.name || !userData.username || !userData.email) {
+      toast.warn('Fadlan xogta dhameestir');
       return;
     }
     let oldUsername:string = user.username
