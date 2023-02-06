@@ -10,9 +10,9 @@ const Header: React.FC = () => {
   return (
     <>
       <div className="header">
-        <a href="#" className="logo">
+        <Link to="/home" className="logo">
           kaab
-        </a>
+        </Link>
         <div className="menu">
           <span>
             <FaUserAlt />

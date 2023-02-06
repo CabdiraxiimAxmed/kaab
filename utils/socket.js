@@ -12,6 +12,8 @@ const socketConnection = server => {
       javascriptRunCode({ ...codeData, socket });
     });
     socket.on('testCode', codeData => {
+      const { language } = codeData;
+      socket.emit('start-loading', language);
       javascriptTestCode({ ...codeData, socket });
     });
   });

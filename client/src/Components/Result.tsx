@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { RootState } from '../app/store';
 import { toast } from 'react-toastify';
+import { CirclesWithBar } from  'react-loader-spinner'
 import { useSelector } from 'react-redux';
 import JavascriptFailedMessage from './JavascriptFailedMessage';
 import moment from 'moment';
@@ -24,6 +25,7 @@ const Result: React.FC = () => {
     time: '',
   });
   const [displayCodeResult, setDisplayCodeResult] = useState<boolean>(false);
+  const [displaySpinner, setDisplaySpinner] = useState<boolean>(false);
   const [displayJavascriptFailedMessage, setDisplayJavascriptFailedMessage] =
     useState<boolean>(false);
   const [javascriptFailedMessage, setJavascriptFailedMessage] = useState<
@@ -41,10 +43,13 @@ const Result: React.FC = () => {
       let time = moment().format('hh:mm:ss');
       let socketCodeResult = { result, time };
       setDisplayCodeResult(true);
+      setDisplaySpinner(false);
       setDisplayJavascriptFailedMessage(false);
       setCodeResult(socketCodeResult);
+      setDisplaySpinner(false);
     });
     socket.on('passed', ({ questionId }: {questionId: number}) => {
+      setDisplaySpinner(false);
       axios.post('/api/questions/answered', { username: user.username, questionId })
         .then(resp => {
           if (resp.data === 'error') {
@@ -59,15 +64,33 @@ const Result: React.FC = () => {
     socket.on(
       'javascriptFailedMessage',
       (result: JavascriptFailedMessageType[]) => {
+        setDisplaySpinner(false);
         setDisplayCodeResult(false);
         setDisplayJavascriptFailedMessage(true);
         setJavascriptFailedMessage(result);
       }
     );
+    socket.on('start-loading', (langauge: string) => {
+      setDisplaySpinner(true);
+        setDisplayCodeResult(false);
+        setDisplayJavascriptFailedMessage(false);
+    });
   }, [socket, codeResult, javascriptFailedMessage]);
 
   return (
     <div className="result-container">
+      {displaySpinner && <div className='spinner-container'>
+        <CirclesWithBar
+          height="100"
+          width="100"
+          color="#4d6492"
+          ariaLabel="audio-loading"
+          wrapperStyle={{}}
+          wrapperClass="wrapper-class"
+          visible={true}
+        />
+      </div>
+      }
       {displayCodeResult && <CodeResult result={codeResult} />}
       {displayJavascriptFailedMessage && (
         <JavascriptFailedMessage messages={javascriptFailedMessage} />
