@@ -7,9 +7,7 @@ interface Props {
 const JavascriptFailedMessage: React.FC<Props> = ({ messages }) => {
   return (
     <div className="javascript-failed-message-container">
-      <div className="failed-message-header">
-        <p>Natiijada</p>
-      </div>
+      <p>Natiijada</p>
       {messages.map((message: JavascriptFailedMessageType, index: number) => (
         <div className="javascript-failed-message">
           <p className="message-title">{message.title}</p>

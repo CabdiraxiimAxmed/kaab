@@ -20,10 +20,10 @@ type CodeResultType = {
 const Result: React.FC = () => {
   const user = useSelector((state: RootState) => state.user.value);
   const { socket } = useContext(SocketContext) as Value;
-  const [codeResult, setCodeResult] = useState<CodeResultType>({
+  const [codeResult, setCodeResult] = useState<CodeResultType[]>([{
     result: '',
     time: '',
-  });
+  }]);
   const [displayCodeResult, setDisplayCodeResult] = useState<boolean>(false);
   const [displaySpinner, setDisplaySpinner] = useState<boolean>(false);
   const [displayJavascriptFailedMessage, setDisplayJavascriptFailedMessage] =
@@ -45,7 +45,7 @@ const Result: React.FC = () => {
       setDisplayCodeResult(true);
       setDisplaySpinner(false);
       setDisplayJavascriptFailedMessage(false);
-      setCodeResult(socketCodeResult);
+      setCodeResult([...codeResult, socketCodeResult]);
       setDisplaySpinner(false);
     });
     socket.on('passed', ({ questionId }: {questionId: number}) => {
@@ -77,8 +77,15 @@ const Result: React.FC = () => {
     });
   }, [socket, codeResult, javascriptFailedMessage]);
 
+  const clearResult = () => {
+    setCodeResult([{ result: '', time: '' }]);
+  };
+
   return (
     <div className="result-container">
+        <button onClick={clearResult} className="result-clear-button">
+          Tir
+        </button>
       {displaySpinner && <div className='spinner-container'>
         <CirclesWithBar
           height="100"
@@ -100,32 +107,13 @@ const Result: React.FC = () => {
 };
 
 interface CodeResultProps {
-  result: { result: string; time: string };
+  result: { result: string; time: string }[];
 }
 const CodeResult: React.FC<CodeResultProps> = ({ result }) => {
-  const [codeResult, setCodeResult] = useState<CodeResultType[]>([
-    {
-      result: '',
-      time: '',
-    },
-  ]);
-
-  useEffect(() => {
-    setCodeResult([...codeResult, result]);
-  }, [result]);
-
-  const clearResult = () => {
-    setCodeResult([{ result: '', time: '' }]);
-  };
   return (
     <>
-      <div className="result-header">
-        <p>Natiijada</p>
-        <button onClick={clearResult} className="result-clear-button">
-          Tir
-        </button>
-      </div>
-      {codeResult.map((result: any, index: number) => (
+      <p>Natiijada</p>
+      {result.map((result: any, index: number) => (
         <div key={index} className="code-results-container">
           <p className="code-result-display">{result.result}</p>
           <p className="result-time-display">{result.time}</p>

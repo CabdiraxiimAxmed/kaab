@@ -9,6 +9,8 @@ const socketConnection = server => {
   io.on('connection', socket => {
     socket.emit('message', 'connected');
     socket.on('runCode', codeData => {
+      const { language } = codeData;
+      socket.emit('start-loading', language);
       javascriptRunCode({ ...codeData, socket });
     });
     socket.on('testCode', codeData => {
