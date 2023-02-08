@@ -16,7 +16,6 @@ function javascriptTestCode(codeData) {
     } else {
       existedContainer.start((err, data) => {
         if (err) {
-          console.log({ err });
         } else {
           copyFiles(codeData, existedContainer);
         }
@@ -76,7 +75,6 @@ EOF
   });
 }
 function testCode(codeData, container) {
-  console.log('inside test code function');
   const { socket, questionId } = codeData;
   let execWritingOptions = {
     Cmd: ['jest', '--json'],
@@ -86,7 +84,6 @@ function testCode(codeData, container) {
   container.exec(execWritingOptions, (err, exec) => {
     exec.start((err, stream) => {
       if (err) {
-        console.log(err);
         // return res.send('error happened');
       }
       stream.on('data', async data => {
@@ -139,7 +136,6 @@ const getMessages = result => {
         error['expected'] = expected.join('');
         errorOutput.push(error);
       } else if (errorType === 'referenceError') {
-        console.log(result);
         let referenceError =
           output.failureMessages[0].match(referenceErrorRegex);
         error['title'] = referenceError.join('');

@@ -11,7 +11,11 @@ type SocketUsers = {
   socketId: string
 }
 
-const ShareButton: React.FC = () => {
+interface Probs {
+  displayShareButton: boolean;
+} 
+
+const ShareButton: React.FC<Probs> = ({ displayShareButton }) => {
   const [isShared, setIsShared] = useState<boolean>(false);
   const user = useSelector((state: RootState) => state.user.value);
   const [socketUsers, setSocketUsers] = useState<SocketUsers[]>();
@@ -31,7 +35,7 @@ const ShareButton: React.FC = () => {
           return;
         }
         toast.success('to the room');
-       // setIsShared(true);
+       setIsShared(true);
         socket.emit('share', {roomId: 1, username: user.username });
     }) .catch(error => {
         toast.error(error.message);
@@ -45,7 +49,7 @@ const ShareButton: React.FC = () => {
 
   return (
     <div className='shared-container'>
-      <button disabled={isShared} onClick={handleShare}>Baahi</button>
+      {displayShareButton && <button disabled={isShared} onClick={handleShare}>Baahi</button>}
       <div className='shared-users-container'>
         {socketUsers && socketUsers.map((socketUser: SocketUsers, index: number) => (
           <p key={index}> <FaUserAlt /> {socketUser.username === user.username ? 'Ani' : socketUser.username } </p>

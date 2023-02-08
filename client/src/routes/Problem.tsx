@@ -86,7 +86,7 @@ const Problem: React.FC = () => {
             id={problem.id}
           />
         )}
-        <Result />
+        <Result displayShareButton={true} />
       </div>
     </>
   );

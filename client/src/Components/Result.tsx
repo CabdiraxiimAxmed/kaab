@@ -18,7 +18,12 @@ type CodeResultType = {
   result: string;
   time: string;
 };
-const Result: React.FC = () => {
+
+interface Probs {
+  displayShareButton: boolean;
+}
+
+const Result: React.FC<Probs> = ({ displayShareButton }) => {
   const user = useSelector((state: RootState) => state.user.value);
   const { socket } = useContext(SocketContext) as Value;
   const [codeResult, setCodeResult] = useState<CodeResultType[]>([{
@@ -105,7 +110,7 @@ const Result: React.FC = () => {
           <JavascriptFailedMessage messages={javascriptFailedMessage} />
         )}
       </div>
-      <ShareButton />
+      <ShareButton  displayShareButton={displayShareButton}/>
     </div>
   );
 };

@@ -62,7 +62,7 @@ const Shared: React.FC = () => {
             id={problem.id}
           />
         )}
-        <Result />
+        <Result displayShareButton={false} />
       </div>
 
     </>
