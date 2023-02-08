@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { RootState } from '../app/store';
 import { toast } from 'react-toastify';
+import ShareButton from '../Components/ShareButton';
 import { CirclesWithBar } from  'react-loader-spinner'
 import { useSelector } from 'react-redux';
 import JavascriptFailedMessage from './JavascriptFailedMessage';
@@ -83,25 +84,28 @@ const Result: React.FC = () => {
 
   return (
     <div className="result-container">
+      <div className='display-container'>
         <button onClick={clearResult} className="result-clear-button">
           Tir
         </button>
-      {displaySpinner && <div className='spinner-container'>
-        <CirclesWithBar
-          height="100"
-          width="100"
-          color="#4d6492"
-          ariaLabel="audio-loading"
-          wrapperStyle={{}}
-          wrapperClass="wrapper-class"
-          visible={true}
-        />
+        {displaySpinner && <div className='spinner-container'>
+          <CirclesWithBar
+            height="100"
+            width="100"
+            color="#4d6492"
+            ariaLabel="audio-loading"
+            wrapperStyle={{}}
+            wrapperClass="wrapper-class"
+            visible={true}
+          />
+        </div>
+        }
+        {displayCodeResult && <CodeResult result={codeResult} />}
+        {displayJavascriptFailedMessage && (
+          <JavascriptFailedMessage messages={javascriptFailedMessage} />
+        )}
       </div>
-      }
-      {displayCodeResult && <CodeResult result={codeResult} />}
-      {displayJavascriptFailedMessage && (
-        <JavascriptFailedMessage messages={javascriptFailedMessage} />
-      )}
+      <ShareButton />
     </div>
   );
 };

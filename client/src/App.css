@@ -194,6 +194,23 @@
   border-left: 1px solid #d9d9d9;
   border-radius: 5px;
   position: relative;
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+}
+.display-container {
+  height: 100%;
+  overflow: auto;
+}
+
+.shared-container {
+}
+.shared-container {
+  padding: 5px;
+  overflow: auto;
+}
+.shared-container .shared-users-container p {
+  border-bottom: 0.001px solid rgba(0, 0, 0, 0.2);
+  padding: 2px;
 }
 .result-container .spinner-container {
   position: absolute;
@@ -213,6 +230,7 @@
 .code-results-container {
   border-bottom: 1px solid #d9d9d9;
   padding: 3px 3px 3px 15px;
+  overflow: auto;
 }
 .code-result-display {
   color: #4d6492;
@@ -237,6 +255,7 @@
   height: 90vh;
   border-left: 1px solid #d9d9d9;
   border-radius: 5px;
+  overflow: auto;
 }
 
 .javascript-failed-message {

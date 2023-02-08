@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import QuestionText from '../Components/QuestionText';
 import Editor from '../Components/Editor';
+import { SocketContext, Value } from '../app/Socket';
 import { ToastContainer, toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -15,7 +16,15 @@ type ProblemType = {
   folder: string;
   id: number;
 };
+
+type UserJoined = {
+  username: string;
+  roomId: number;
+  users: { username:string, socketId: string }[];
+}
+
 const Problem: React.FC = () => {
+  const { socket } = useContext(SocketContext) as Value;
   const [problem, setProblem] = useState<ProblemType>({
     language: '',
     file: '',
@@ -43,6 +52,16 @@ const Problem: React.FC = () => {
         toast.error(err.message);
       });
   }, []);
+
+  useEffect(() => {
+    socket.on('user-joined', (data: UserJoined) => {
+      let { username, roomId, users } = data;
+      if(problem.code) {
+        socket.emit('shareCodeData', {roomId, problem });
+      }
+    });
+  }, [socket]);
+
   return (
     <>
       <ToastContainer
@@ -74,3 +93,4 @@ const Problem: React.FC = () => {
 };
 
 export default Problem;
+export type { ProblemType };

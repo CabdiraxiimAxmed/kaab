@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
+import { useCookies } from 'react-cookie';
 import { setUser } from '../features/user';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -10,6 +11,7 @@ type Data = {
   password: string;
 };
 const Login: React.FC = () => {
+  const [cookies, setCookies ] = useCookies<string>(['']);
   console.log('login');
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,6 +36,12 @@ const Login: React.FC = () => {
       .then(resp => {
         if (typeof resp.data == 'object') {
           dispatch(setUser(resp.data));
+          console.log("setting cookie");
+          setCookies('login', resp.data.username, {
+            path: '/',
+            maxAge: 86400,
+          });
+
           navigate('/home');
         } else if (resp.data == 'account-not-found') {
           toast.error('cinwaanka ma abuurno');

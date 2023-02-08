@@ -25,7 +25,19 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id }) => {
   useEffect(() => {
     setCode(preWrittenCode);
   }, [preWrittenCode]);
+
+  useEffect(() => {
+    socket.on('code', (value: string) => {
+      setCode(value)
+    });
+  }, [socket])
+
   function handleEditorChange(value = '') {
+    // TODO: change this later
+    //
+    if (true) {
+      socket.emit('shareCodeText', {roomId: 1, value });
+    }
     setCode(value);
   }
   const runCode = () => {

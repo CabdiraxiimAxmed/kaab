@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Singup from './routes/signup';
 import Login from './routes/login';
+import Shared from './routes/Shared';
 import User from './routes/User';
 import PageNotFound from './routes/PageNotFound';
 import ProtectedRoute from './routes/ProtectedRoute';
@@ -26,6 +27,7 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/home" element={<Home />} />
+          <Route path="/share/:roomId" element={<Shared />} />
           <Route path="/profile" element={<User />} />
           <Route path="/problem/:id" element={<Problem />} />
         </Route>

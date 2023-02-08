@@ -3,7 +3,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import QuestionLinks from '../Components/QuestionLinks';
 import { useNavigate } from 'react-router-dom';
-
 type Question = {
   id: number;
   name: string;

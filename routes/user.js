@@ -79,7 +79,6 @@ router.post('/update', async(req, res) => {
     await client.query(`UPDATE user_info set name='${name}', email = '${email}', username='${newUsername}' WHERE username='${oldUsername}'`);
     res.send('success');
   } catch(err) {
-    console.log(err);
     res.send('error').end();
   }
 });
@@ -110,7 +109,6 @@ router.get('/report/:username', async(req, res) => {
     answered = answered.length;
     res.send({ answeredCount: answered, easy, medium, hard }).end();
   } catch(err) {
-    console.log(err);
     res.send('error').end();
   }
 });
