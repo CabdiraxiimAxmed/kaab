@@ -7,13 +7,17 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Result from '../Components/Result';
 
-type ProblemType = {
-  language: string;
+type Languages = {
   file: string;
   code: string;
-  readMe: string;
   srcPath: string;
+  language: string;
   folder: string;
+
+}
+type ProblemType = {
+  languages: Languages[];
+  question: string;
   id: number;
 };
 
@@ -24,14 +28,11 @@ type UserJoined = {
 }
 
 const Problem: React.FC = () => {
+  const [userLanguage, setUserLanguage] = useState<string>('javascript');
   const { socket } = useContext(SocketContext) as Value;
   const [problem, setProblem] = useState<ProblemType>({
-    language: '',
-    file: '',
-    code: '',
-    readMe: '',
-    srcPath: '',
-    folder: '',
+    languages: [{file: '', code: '', srcPath: '', language: '', folder: ''}],
+    question: '',
     id: 0,
   });
 
@@ -53,14 +54,25 @@ const Problem: React.FC = () => {
       });
   }, []);
 
+  const getDefaultCodeLanguage = (languages: Languages[]) => languages.find((language: Languages) => language.language === userLanguage);
+
+  let userDefaultLanguage: Languages| undefined = getDefaultCodeLanguage(problem.languages);
+
+
   useEffect(() => {
     socket.on('user-joined', (data: UserJoined) => {
       let { username, roomId, users } = data;
-      if(problem.code) {
-        socket.emit('shareCodeData', {roomId, problem });
-      }
+      // Sharing cod
+      // if(problem.code) {
+      //   socket.emit('shareCodeData', {roomId, problem });
+      // }
     });
   }, [socket]);
+
+  const handleLanguageChange = (language: string): void => {
+    setUserLanguage(language);
+  }
+
 
   return (
     <>
@@ -77,14 +89,43 @@ const Problem: React.FC = () => {
         theme="dark"
       />
       <div className="question-editor-result-container">
-        {problem.readMe && <QuestionText questionText={problem.readMe} />}
-        {problem.code && (
-          <Editor
-            preWrittenCode={problem.code}
-            file={problem.file}
-            folder={problem.folder}
-            id={problem.id}
-          />
+        {problem.question && <QuestionText questionText={problem.question} />}
+        {userDefaultLanguage?.code && (
+          <div className='editor-container'>
+            <div className="dropdown">
+              <button className="dropBtn">
+                luuqadaha
+              </button>
+              <div className="dropdown-content">
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    name="name"
+                    className="checkbox"
+                    onClick = {() => handleLanguageChange('javascript')}
+                  />
+                  <span>Javascript</span>
+                </label>
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    name="name"
+                    className="checkbox"
+                    onClick = {() => handleLanguageChange('python')}
+                  />
+                  <span>Python</span>
+                </label>
+              </div>
+            </div>
+
+            <Editor
+              preWrittenCode={userDefaultLanguage.code}
+              file={userDefaultLanguage.file}
+              folder={userDefaultLanguage.folder}
+              id={problem.id}
+              language={userLanguage}
+            />
+          </div>
         )}
         <Result displayShareButton={true} />
       </div>
@@ -92,5 +133,6 @@ const Problem: React.FC = () => {
   );
 };
 
+
 export default Problem;
-export type { ProblemType };
+export type { ProblemType, Languages };

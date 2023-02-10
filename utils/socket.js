@@ -1,6 +1,7 @@
-const { javascriptRunCode } = require('./javascriptRunCode');
 const client = require('../models/connect');
+const { javascriptRunCode } = require('./javascriptRunCode');
 const { javascriptTestCode } = require('./javascriptTestCode');
+const { pythonRunCode } = require('./pythonRunCode');
 const socket = require('socket.io');
 
 let io;
@@ -9,16 +10,27 @@ const socketConnection = server => {
   io = socket(server);
   io.on('connection', socket => {
     socket.emit('message', 'connected');
-    socket.on('runCode', codeData => {
+    // Running and testing javascript code here
+    socket.on('runJavascriptCode', codeData => {
       const { language } = codeData;
+      console.log(codeData);
       socket.emit('start-loading', language);
       javascriptRunCode({ ...codeData, socket });
     });
-    socket.on('testCode', codeData => {
+    socket.on('testJavascriptCode', codeData => {
       const { language } = codeData;
       socket.emit('start-loading', language);
       javascriptTestCode({ ...codeData, socket });
     });
+
+    // Running and testing python code here
+    socket.on('runPythonCode', codeData => {
+      const { language } = codeData;
+      console.log(codeData);
+      //socket.emit('start-loading', language);
+      pythonRunCode({ ...codeData, socket });
+    });
+
 
     // For sharing code.
     socket.on('share', async({ roomId, username }) => {

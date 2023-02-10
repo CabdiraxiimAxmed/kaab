@@ -1,8 +1,7 @@
-// javascript run code.
 const Docker = require('dockerode');
 const docker = new Docker();
 
-const javascriptRunCode = codeData => {
+const pythonRunCode = codeData => {
   const { username, language, folder } = codeData;
   const existedContainer = docker.getContainer(
     `${username}_${language}_${folder}`
@@ -47,9 +46,9 @@ const createContainer = codeData => {
       }
       
       container.putArchive(
-        `./exercises/javascript/${folder}.tar`,
+        `./exercises/python/${folder}.tar`,
         {
-          path: '/app/javascript/',
+          path: '/app/python/',
         },
         (err, data) => {
           if (err) {
@@ -80,8 +79,8 @@ const copyFiles = (container, codeData) => {
     Cmd: [
       'bash',
       '-c',
-      `cat <<EOF > /app/javascript/${folder}/${file} 
- ${code}
+      `cat <<EOF > /app/python/${folder}/${file} 
+${code}
 
 EOF
         `,
@@ -103,7 +102,7 @@ EOF
 const runCode = (container, codeData) => {
   const { socket, file, folder } = codeData;
   let execWritingOptions = {
-    Cmd: ['bash', '-c', `node /app/javascript/${folder}/${file}`],
+    Cmd: ['bash', '-c', `python /app/python/${folder}/${file}`],
     AttachStdout: true,
     AttachStderr: true,
   };
@@ -116,11 +115,10 @@ const runCode = (container, codeData) => {
         const result = data.toString();
         let regex = /[a-zA-Z0-9_.-]+/g;
         let codeResult = result.match(regex);
-        console.log(codeResult.join(' '));
         socket.emit('codeResult', codeResult.join(' '));
       });
     });
   });
 };
 
-module.exports = { javascriptRunCode };
+module.exports = { pythonRunCode };

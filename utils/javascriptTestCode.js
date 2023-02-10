@@ -26,7 +26,7 @@ function javascriptTestCode(codeData) {
 function createContainer(codeData) {
   const { username, folder, language } = codeData;
   let containerOptions = {
-    Image: 'javascript',
+    Image: 'test_runner',
     AttachStdin: false,
     AttachStdout: true,
     AttachStderr: true,
@@ -40,7 +40,7 @@ function createContainer(codeData) {
       container.putArchive(
         `./exercises/javascript/${folder}.tar`,
         {
-          path: '/app',
+          path: '/app/javascript',
         },
         (err, result) => {
           copyFiles(codeData, container);
@@ -56,7 +56,7 @@ function copyFiles(codeData, container) {
     Cmd: [
       'bash',
       '-c',
-      `cat <<EOF > ${folder}/${file} 
+      `cat <<EOF > /app/javascript/${folder}/${file} 
  ${code}
 
 EOF
@@ -77,7 +77,7 @@ EOF
 function testCode(codeData, container) {
   const { socket, questionId } = codeData;
   let execWritingOptions = {
-    Cmd: ['jest', '--json'],
+    Cmd: ['bash', '-c', 'cd javascript && jest --json'],
     AttachStdout: true,
     AttachStderr: true,
   };

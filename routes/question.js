@@ -28,42 +28,67 @@ router.get('/find/:id', async (req, res) => {
       return;
     }
     let { file, folder, id: questionId } = question.rows[0];
-    let code = getJavascript(file, folder, questionId);
-    res.send(code);
+    let javascript = getJavascript(file, folder, questionId);
+    let python = getPython(file, folder);
+    let questionText = getQuestion(file, folder)
+    res.send({languages: [javascript, python], question: questionText, id: questionId });
   } catch (err) {
+    console.log(err);
     res.send('error');
   }
 });
 
-const getJavascript = (file, folder, id) => {
+const getJavascript = (file, folder) => {
   const codeFilePath = path.join(
     __dirname,
     `../exercises/javascript/${folder}/${file}.js`
   );
-  const readMeFilePath = path.join(
-    __dirname,
-    `../exercises/javascript/${folder}/${file}.md`
-  );
   const arePathsExist =
-    fs.existsSync(codeFilePath) && fs.existsSync(readMeFilePath);
+    fs.existsSync(codeFilePath);
   if (arePathsExist) {
-    const srcPath = path.join(__dirname, `../exercises/${file}/${file}.tar`);
+    const srcPath = path.join(__dirname, `../exercises/javascript/${file}/${file}.tar`);
     const fileName = path.basename(codeFilePath);
     const extenname = path.extname(codeFilePath);
     const folderName = path.basename(codeFilePath, extenname);
     const code = fs.readFileSync(codeFilePath, 'utf8');
-    const readMe = fs.readFileSync(readMeFilePath, 'utf8');
     return {
       language: 'javascript',
       file: fileName,
       code,
-      readMe,
       srcPath,
       folder: folderName,
-      id,
     };
   }
 };
+
+const getQuestion = (folder, file) => {
+  const readMeFilePath = path.join( __dirname, `../exercises/javascript/${folder}/${file}.md`);
+  const question = fs.readFileSync(readMeFilePath, 'utf8');
+  return question;
+}
+
+const getPython = (file, folder, questionId) => {
+  const codeFilePath = path.join(
+    __dirname,
+    `../exercises/python/${folder}/${file}.py`
+  );
+  const arePathsExist =
+    fs.existsSync(codeFilePath);
+  if (arePathsExist) {
+    const srcPath = path.join(__dirname, `../exercises/python/${file}/${file}.tar`);
+    const fileName = path.basename(codeFilePath);
+    const extenname = path.extname(codeFilePath);
+    const folderName = path.basename(codeFilePath, extenname);
+    const code = fs.readFileSync(codeFilePath, 'utf8');
+    return {
+      language: 'python',
+      file: fileName,
+      code,
+      srcPath,
+      folder: folderName,
+    };
+  }
+}
 
 router.post('/answered', async(req, res) => {
   let { questionId, username } = req.body;
@@ -83,6 +108,7 @@ router.post('/answered', async(req, res) => {
     res.send('error').end();
   }
 });
+
 
 const getDescription = file => {
   const readMeFilePath = path.join(
