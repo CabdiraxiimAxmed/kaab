@@ -193,11 +193,14 @@
 .editor-container {
   position: relative;
 }
-.editor-header {
+.editor-header-container {
   width: 100%;
   height: 2rem;
   display: flex;
   align-items: center;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
   /* padding-left: 3px; */
   border-bottom: 1px solid #d9d9d9;
 }

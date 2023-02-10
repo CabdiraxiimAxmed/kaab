@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { SocketContext, Value } from '../app/Socket';
 import { langs } from '@uiw/codemirror-extensions-langs';
-import { FaJsSquare } from 'react-icons/fa';
 import { vim } from '@replit/codemirror-vim';
 import { RootState } from '../app/store';
 import { useSelector } from 'react-redux';
@@ -55,12 +54,7 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id, language })
   };
 
   return (
-    <div className="editor-container">
-      <div className="editor-header">
-        <div className="file-name-container">
-          <FaJsSquare className="file-icon" /> {file}
-        </div>
-      </div>
+    <>
       <Codemirror
         value={code}
         height='90vh'
@@ -76,7 +70,7 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id, language })
           Test
         </button>
       </div>
-    </div>
+    </>
   );
 };
 
