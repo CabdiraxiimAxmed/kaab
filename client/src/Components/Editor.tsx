@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { SocketContext, Value } from '../app/Socket';
+import { StreamLanguage } from '@codemirror/language';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import { vim } from '@replit/codemirror-vim';
 import { RootState } from '../app/store';
@@ -17,7 +18,7 @@ interface Props {
 const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id, language }) => {
   const { socket } = useContext(SocketContext) as Value;
   const [code, setCode] = useState<string>('');
-  const [extensions] = useState<any[]>([
+  const [extensions, setExtensions] = useState<any[]>([
     langs.tsx(),
     vim(),
   ])
@@ -27,10 +28,22 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id, language })
   }, [preWrittenCode]);
 
   useEffect(() => {
+    if(language === 'python') {
+      setExtensions([
+        langs.python(),
+        vim(),
+      ])
+    } else if (language === 'javascript') {
+      setExtensions([
+        langs.tsx(),
+        vim(),
+      ])
+    }
+
     socket.on('code', (value: string) => {
       setCode(value)
     });
-  }, [socket])
+  }, [socket, language])
 
   function handleEditorChange(value = '') {
     // TODO: change this later
