@@ -61,16 +61,15 @@ const Problem: React.FC = () => {
 
   let userDefaultLanguage: Languages | undefined = getDefaultCodeLanguage(problem.languages);
 
-
   useEffect(() => {
     socket.on('user-joined', (data: UserJoined) => {
       let { username, roomId, users } = data;
-      // Sharing cod
-      // if(problem.code) {
-      //   socket.emit('shareCodeData', {roomId, problem });
-      // }
+      if(userDefaultLanguage?.code) {
+        let codeData =  { language: userDefaultLanguage, question: problem.question, id: problem.id }
+        socket.emit('shareCodeData', {roomId, codeData });
+      }
     });
-  }, [socket]);
+  }, [socket, userDefaultLanguage]);
 
   const handleLanguageChange = (language: string): void => {
     if (language === 'javascript') {

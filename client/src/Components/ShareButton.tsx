@@ -34,7 +34,6 @@ const ShareButton: React.FC<Probs> = ({ displayShareButton }) => {
           toast.error('server error');
           return;
         }
-        toast.success('to the room');
        setIsShared(true);
         socket.emit('share', {roomId: 1, username: user.username });
     }) .catch(error => {

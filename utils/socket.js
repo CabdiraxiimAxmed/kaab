@@ -69,11 +69,13 @@ const socketConnection = server => {
         socket.emit('share-error', "Error on sharing user");
       }
 
-      socket.on('shareCodeData', async({roomId, problem}) => {
+      socket.on('shareCodeData', async({roomId, codeData}) => {
+        console.log("sharing code");
+        console.log(codeData);
         try {
           let response = await client.query(`SELECT * FROM rooms WHERE room_id='${roomId}'`);
           let room = response.rows[0];
-          socket.to(room.room_id).emit('codeData', problem);
+          socket.to(room.room_id).emit('codeData', codeData);
         } catch(err) {
           socket.emit('code-error', "error on sharing code data");
         }

@@ -1,23 +1,25 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { SocketContext, Value } from '../app/Socket';
+import { FaJsSquare } from 'react-icons/fa';
+import { FaPython } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import Result from '../Components/Result'
 import Editor from '../Components/Editor'
 import QuestionText from '../Components/QuestionText'
-import { ProblemType } from './Problem';
 import { RootState } from '../app/store';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
+type SharedProblemType = {
+  language: { code: string; file: string; folder: string; language: string; srcPath: string};
+  question: string;
+  id: number;
+}
 const Shared: React.FC = () => {
   const { username } = useSelector((state: RootState) => state.user.value);
-  const [problem, setProblem] = useState<ProblemType>({
-    language: '',
-    file: '',
-    code: '',
-    readMe: '',
-    srcPath: '',
-    folder: '',
+  const [problem, setProblem] = useState<SharedProblemType>({
+    language: { code: '', file: '', folder: '', language: '', srcPath: '' },
+    question: '',
     id: 0,
   });
   const { socket } = useContext(SocketContext) as Value;
@@ -31,10 +33,9 @@ const Shared: React.FC = () => {
         // do some stuff.
       })
     }
-    socket.on('codeData', (problem: ProblemType) => {
+    socket.on('codeData', (codeData: SharedProblemType) => {
       console.log('This is the final one');
-      console.log(problem);
-      setProblem(problem);
+      setProblem(codeData);
     })
   }, [username]);
 
@@ -53,14 +54,22 @@ const Shared: React.FC = () => {
         theme="dark"
       />
       <div className="question-editor-result-container">
-        {problem.readMe && <QuestionText questionText={problem.readMe} />}
-        {problem.code && (
-          <Editor
-            preWrittenCode={problem.code}
-            file={problem.file}
-            folder={problem.folder}
-            id={problem.id}
-          />
+        {problem.question && <QuestionText questionText={problem.question} />}
+        {problem.language.code && (
+          <div className='editor-container'>
+            <div className='editor-header-container' style={{ flexDirection: "row" }}>
+              <div className="file-name-container">
+                {problem.language.file === 'sum.js' ? <FaJsSquare className="file-icon" /> : <FaPython className='file-icon' />} {problem.language.file}
+              </div>
+            </div>
+            <Editor
+              preWrittenCode={problem.language.code}
+              file={problem.language.file}
+              folder={problem.language.folder}
+              language={problem.language.language}
+              id={problem.id}
+            />
+          </div>
         )}
         <Result displayShareButton={false} />
       </div>
