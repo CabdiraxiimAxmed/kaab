@@ -2,6 +2,7 @@ const client = require('../models/connect');
 const { javascriptRunCode } = require('./javascriptRunCode');
 const { javascriptTestCode } = require('./javascriptTestCode');
 const { pythonRunCode } = require('./pythonRunCode');
+const { pythonTestCode } = require('./pythonTestCode');
 const socket = require('socket.io');
 
 let io;
@@ -29,6 +30,13 @@ const socketConnection = server => {
       console.log(codeData);
       //socket.emit('start-loading', language);
       pythonRunCode({ ...codeData, socket });
+    });
+
+    socket.on('testPythonCode', codeData => {
+      console.log('testing python code.');
+      const { language } = codeData;
+      socket.emit('start-loading', language);
+      pythonTestCode({ ...codeData, socket });
     });
 
 

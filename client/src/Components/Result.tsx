@@ -5,6 +5,7 @@ import ShareButton from '../Components/ShareButton';
 import { CirclesWithBar } from  'react-loader-spinner'
 import { useSelector } from 'react-redux';
 import JavascriptFailedMessage from './JavascriptFailedMessage';
+import PythonFailedMessage from './PythonFailedMessages';
 import moment from 'moment';
 import axios from 'axios';
 import { SocketContext, Value } from '../app/Socket';
@@ -14,6 +15,7 @@ type JavascriptFailedMessageType = {
   received: string;
   expected: string;
 };
+
 type CodeResultType = {
   result: string;
   time: string;
@@ -32,8 +34,9 @@ const Result: React.FC<Probs> = ({ displayShareButton }) => {
   }]);
   const [displayCodeResult, setDisplayCodeResult] = useState<boolean>(false);
   const [displaySpinner, setDisplaySpinner] = useState<boolean>(false);
-  const [displayJavascriptFailedMessage, setDisplayJavascriptFailedMessage] =
-    useState<boolean>(false);
+  const [displayJavascriptFailedMessage, setDisplayJavascriptFailedMessage] = useState<boolean>(false);
+  const [displayPythonFailedMessage, setDisplayPythonFailedMessage] = useState<boolean>(false);
+  const [pythonFailedMessages, setPythonFailedMessages] = useState<string[]>(['']);
   const [javascriptFailedMessage, setJavascriptFailedMessage] = useState<
     JavascriptFailedMessageType[]
   >([
@@ -51,6 +54,7 @@ const Result: React.FC<Probs> = ({ displayShareButton }) => {
       setDisplayCodeResult(true);
       setDisplaySpinner(false);
       setDisplayJavascriptFailedMessage(false);
+      setDisplayPythonFailedMessage(false)
       setCodeResult([...codeResult, socketCodeResult]);
       setDisplaySpinner(false);
     });
@@ -74,12 +78,23 @@ const Result: React.FC<Probs> = ({ displayShareButton }) => {
         setDisplayCodeResult(false);
         setDisplayJavascriptFailedMessage(true);
         setJavascriptFailedMessage(result);
+        setDisplayPythonFailedMessage(false)
       }
     );
+
+    socket.on("pythonFailedMessages", (messages: string[]) => {
+      setDisplaySpinner(false);
+      setDisplayCodeResult(false);
+      setDisplayJavascriptFailedMessage(false);
+      setDisplayPythonFailedMessage(true)
+      setPythonFailedMessages(messages);
+    });
+
     socket.on('start-loading', (langauge: string) => {
       setDisplaySpinner(true);
         setDisplayCodeResult(false);
         setDisplayJavascriptFailedMessage(false);
+        setDisplayPythonFailedMessage(false)
     });
   }, [socket, codeResult, javascriptFailedMessage]);
 
@@ -106,9 +121,8 @@ const Result: React.FC<Probs> = ({ displayShareButton }) => {
         </div>
         }
         {displayCodeResult && <CodeResult result={codeResult} />}
-        {displayJavascriptFailedMessage && (
-          <JavascriptFailedMessage messages={javascriptFailedMessage} />
-        )}
+        {displayJavascriptFailedMessage && ( <JavascriptFailedMessage messages={javascriptFailedMessage} />)}
+        {displayPythonFailedMessage && ( <PythonFailedMessage messages={pythonFailedMessages} />)}
       </div>
       <ShareButton  displayShareButton={displayShareButton}/>
     </div>
