@@ -212,9 +212,7 @@
   border-right: 1px solid #d9d9d9;
   border-bottom: 1px solid white;
 }
-.file-icon * {
-  color: rgb(185, 185, 6) !important;
-}
+
 .editor-btns-container {
   position: absolute;
   bottom: 4%;
@@ -405,6 +403,27 @@
 .user-report-container .card.question-answered p {
   margin: 3px;
   font-weight: bold;
+}
+
+/* Competition page */
+.competition-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid #4d6492;
+  border-radius: 5px;
+  border-radius: 5px;
+  padding: 20px;
+  padding: 20px;
+}
+
+.countdown-container {
+  border-bottom: .2px solid #4d6492;
+  padding: 4px 0px;
+  display: flex;
+  aling-items: center;
+  justify-content: center;
 }
 
 /* Page not found file */

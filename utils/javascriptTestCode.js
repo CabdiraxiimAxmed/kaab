@@ -1,4 +1,6 @@
 const Docker = require('dockerode');
+const client = require("../models/connect");
+const timeCompleted = require('./time');
 const docker = new Docker();
 
 function javascriptTestCode(codeData) {
@@ -75,7 +77,7 @@ EOF
   });
 }
 function testCode(codeData, container) {
-  const { socket, questionId } = codeData;
+  const { socket, questionId, isCompetition, startingTime, username, competitionId } = codeData;
   let execWritingOptions = {
     Cmd: ['bash', '-c', 'cd javascript && jest --json'],
     AttachStdout: true,
@@ -91,8 +93,22 @@ function testCode(codeData, container) {
         const { json, testResult } = isJson(result);
         if (json) {
           let isPassed = testResult.success;
-          if (isPassed) {
-            // passedTest
+          if (isCompetition && isPassed) {
+            console.log("competition section");
+            let { timeTook, totalSeconds } = timeCompleted(startingTime);
+            let userData = JSON.stringify({ username, timeTook, totalSeconds });
+            try {
+              let response = await client.query(`SELECT users FROM competition WHERE id='${competitionId}'`);
+              let users = response.rows[0].users;
+              let user = users.find(user => user.username === username);
+              if (!user)
+                await client.query(`UPDATE competition set users=ARRAY_APPEND(users, '${userData}') WHERE id='${competitionId}'`);
+              socket.emit("roun-passed", "passed");
+            } catch(err) {
+              // TODO: send socket error.
+              console.log(err.message);
+            }
+          } else if (isPassed) {
             socket.emit('passed', { questionId });
           } else {
             let warningMessage = testResult.testResults[0].assertionResults;

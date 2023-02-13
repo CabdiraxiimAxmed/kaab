@@ -67,6 +67,7 @@ const Shared: React.FC = () => {
               file={problem.language.file}
               folder={problem.language.folder}
               language={problem.language.language}
+              isCompetition={false}
               id={problem.id}
             />
           </div>

@@ -96,6 +96,10 @@ const Result: React.FC<Probs> = ({ displayShareButton }) => {
         setDisplayJavascriptFailedMessage(false);
         setDisplayPythonFailedMessage(false)
     });
+
+    socket.on('round-passed', (message: string) => {
+      toast.success("round-passed");
+    })
   }, [socket, codeResult, javascriptFailedMessage]);
 
   const clearResult = () => {

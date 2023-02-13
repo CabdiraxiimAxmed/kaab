@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { SocketContext, Value } from '../app/Socket';
 import { StreamLanguage } from '@codemirror/language';
+import { StartingTime, EndingTime } from '../routes/Competition';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import { vim } from '@replit/codemirror-vim';
 import { RootState } from '../app/store';
@@ -13,9 +14,12 @@ interface Props {
   folder: string;
   id: number;
   language: string;
+  startingTime?: StartingTime;
+  isCompetition: boolean;
+  competitionId?: number;
 }
 
-const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id, language }) => {
+const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id, language, startingTime, isCompetition, competitionId }) => {
   const { socket } = useContext(SocketContext) as Value;
   const [code, setCode] = useState<string>('');
   const [extensions, setExtensions] = useState<any[]>([
@@ -60,10 +64,11 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id, language })
       socket.emit('runPythonCode', { code, file, folder, language, username: user.username });
   };
   const testCode = () => {
+    console.log(isCompetition);
     if (language === 'javascript')
-      socket.emit('testJavascriptCode', { questionId: id, code, file, folder, language, username: user.username });
+      socket.emit('testJavascriptCode', { questionId: id, code, file, folder, language, username: user.username, isCompetition, startingTime, competitionId });
     else if (language === 'python')
-      socket.emit('testPythonCode', { questionId: id, code, file, folder, language, username: user.username });
+      socket.emit('testPythonCode', { questionId: id, code, file, folder, language, username: user.username, isCompetition, startingTime, competitionId });
   };
 
   return (

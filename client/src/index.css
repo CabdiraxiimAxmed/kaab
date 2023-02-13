@@ -21,3 +21,8 @@ button {
   cursor: pointer;
   margin: 5px;
 }
+.language-change-button {
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+}

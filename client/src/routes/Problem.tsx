@@ -64,18 +64,18 @@ const Problem: React.FC = () => {
   useEffect(() => {
     socket.on('user-joined', (data: UserJoined) => {
       let { username, roomId, users } = data;
-      if(userDefaultLanguage?.code) {
-        let codeData =  { language: userDefaultLanguage, question: problem.question, id: problem.id }
-        socket.emit('shareCodeData', {roomId, codeData });
+      if (userDefaultLanguage?.code) {
+        let codeData = { language: userDefaultLanguage, question: problem.question, id: problem.id }
+        socket.emit('shareCodeData', { roomId, codeData });
       }
     });
   }, [socket, userDefaultLanguage]);
 
   const handleLanguageChange = (language: string): void => {
     if (language === 'javascript') {
-      setChecked({javascript: true, python: false });
+      setChecked({ javascript: true, python: false });
     } else if (language === 'python') {
-      setChecked({javascript: false, python: true });
+      setChecked({ javascript: false, python: true });
     }
     setUserLanguage(language);
   }
@@ -105,26 +105,8 @@ const Problem: React.FC = () => {
                   luuqadaha
                 </button>
                 <div className="dropdown-content">
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      name="name"
-                      className="checkbox"
-                      onClick={() => handleLanguageChange('javascript')}
-                      checked = {checked.javascript}
-                    />
-                    <span>Javascript</span>
-                  </label>
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      name="name"
-                      className="checkbox"
-                      onClick={() => handleLanguageChange('python')}
-                      checked = {checked.python}
-                    />
-                    <span>Python</span>
-                  </label>
+                  <button className='language-change-button' onClick={() => handleLanguageChange('javascript')}> <FaJsSquare /> Javascript </button>
+                  <button className='language-change-button' onClick={() => handleLanguageChange('python')}> <FaPython /> Python </button>
                 </div>
               </div>
               <div className="file-name-container">
@@ -137,6 +119,7 @@ const Problem: React.FC = () => {
               folder={userDefaultLanguage.folder}
               id={problem.id}
               language={userLanguage}
+              isCompetition={false}
             />
           </div>
         )}

@@ -1,4 +1,6 @@
 const Docker = require('dockerode');
+const client = require('../models/connect');
+const timeCompleted = require('./time');
 const docker = new Docker();
 
 const pythonTestCode = codeData => {
@@ -100,7 +102,7 @@ EOF
 };
 
 const testCode = (container, codeData) => {
-  const { socket, file, folder, questionId } = codeData;
+  const { socket, file, folder, questionId, isCompetition, startingTime, username, competitionId } = codeData;
   let execWritingOptions = {
     Cmd: ['bash', '-c', `python /app/python/${folder}/test_${file}`],
     AttachStdout: true,
@@ -111,14 +113,30 @@ const testCode = (container, codeData) => {
       if (err) {
         return res.send('error happened');
       }
-      stream.on('data', data => {
+      stream.on('data', async data => {
         const result = data.toString();
         let failedRegex = /F/;
         let failed = failedRegex.test(result);
         let messages = getErrorMessage(result);
         let passedRegex = /OK/;
         let isPassed = passedRegex.test(result);
-        if (isPassed) {
+        if (isPassed && isCompetition) {
+          console.log("competition section");
+          let { timeTook, totalSeconds } = timeCompleted(startingTime);
+          let userData = JSON.stringify({ username, timeTook, totalSeconds });
+          try {
+            let response = await client.query(`SELECT users FROM competition WHERE id='${competitionId}'`);
+            let users = response.rows[0].users;
+            let user = users.find(user => user.username === username);
+            if (!user)
+              await client.query(`UPDATE competition set users=ARRAY_APPEND(users, '${userData}') WHERE id='${competitionId}'`);
+            socket.emit("roun-passed", "passed");
+          } catch(err) {
+            // TODO: send socket error.
+            console.log(err.message);
+          }
+
+        } else if (isPassed) {
           socket.emit('passed', { questionId });
         } else if (messages?.length > 0) {
           socket.emit("pythonFailedMessages", messages);
