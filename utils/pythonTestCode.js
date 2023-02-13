@@ -121,7 +121,6 @@ const testCode = (container, codeData) => {
         let passedRegex = /OK/;
         let isPassed = passedRegex.test(result);
         if (isPassed && isCompetition) {
-          console.log("competition section");
           let { timeTook, totalSeconds } = timeCompleted(startingTime);
           let userData = JSON.stringify({ username, timeTook, totalSeconds });
           try {

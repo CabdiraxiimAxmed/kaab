@@ -103,7 +103,7 @@ function testCode(codeData, container) {
               let user = users.find(user => user.username === username);
               if (!user)
                 await client.query(`UPDATE competition set users=ARRAY_APPEND(users, '${userData}') WHERE id='${competitionId}'`);
-              socket.emit("roun-passed", "passed");
+              socket.emit("round-passed", competitionId);
             } catch(err) {
               // TODO: send socket error.
               console.log(err.message);

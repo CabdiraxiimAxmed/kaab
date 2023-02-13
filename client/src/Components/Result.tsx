@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { RootState } from '../app/store';
 import { toast } from 'react-toastify';
 import ShareButton from '../Components/ShareButton';
@@ -26,6 +27,7 @@ interface Probs {
 }
 
 const Result: React.FC<Probs> = ({ displayShareButton }) => {
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.value);
   const { socket } = useContext(SocketContext) as Value;
   const [codeResult, setCodeResult] = useState<CodeResultType[]>([{
@@ -66,7 +68,7 @@ const Result: React.FC<Probs> = ({ displayShareButton }) => {
             toast.error('server error');
             return;
           }
-          toast.success('question is stored');
+          navigate('/home');
         }).catch(error => {
           toast.error(error.message);
         })
@@ -97,8 +99,8 @@ const Result: React.FC<Probs> = ({ displayShareButton }) => {
         setDisplayPythonFailedMessage(false)
     });
 
-    socket.on('round-passed', (message: string) => {
-      toast.success("round-passed");
+    socket.on('round-passed', (competitionId: number) => {
+      navigate(`/competitionInfo/${competitionId}`);
     })
   }, [socket, codeResult, javascriptFailedMessage]);
 
