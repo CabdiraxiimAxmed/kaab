@@ -20,8 +20,8 @@ router.get('/:competitionId', async(req, res) => {
 router.get('/info/:competitionId', async(req, res) => {
   const { competitionId } = req.params; 
   try {
-    let competition = await client.query(`SELECT users, questionid FROM competition WHERE id='${competitionId}'`);
-    let questionId = competition.rows[0].questionid[0];
+    let competition = await client.query(`SELECT users, question_id FROM competition WHERE id='${competitionId}'`);
+    let questionId = competition.rows[0].question_id;
     let questionName = await client.query(`SELECT name FROM questions WHERE id='${questionId}'`);
     let data = { name: questionName.rows[0].name, competitors: competition.rows[0].users };
     res.send(data);

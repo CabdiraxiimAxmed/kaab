@@ -13,11 +13,11 @@ import axios from 'axios';
 interface Props {
   startingTime?: StartingTime,
   endingTime?: EndingTime,
-  questionId?: number[];
+  question_id?: number;
   competitionId?: number;
 }
 /* time took to complete */
-const CompetitionPage: React.FC<Props> = ({ startingTime, endingTime, questionId, competitionId }) => {
+const CompetitionPage: React.FC<Props> = ({ startingTime, endingTime, question_id, competitionId }) => {
   const [ userLanguage, setUserLanguage] = useState<string>('javascript');
   const [problem, setProblem] = useState<ProblemType>({
     languages: [{ file: '', code: '', srcPath: '', language: '', folder: '' }],
@@ -26,8 +26,8 @@ const CompetitionPage: React.FC<Props> = ({ startingTime, endingTime, questionId
   });
 
   useEffect(() => {
-    if(questionId){
-      axios.get(`/api/questions/find/${questionId[0]}`)
+    if(question_id){
+      axios.get(`/api/questions/find/${question_id}`)
         .then(resp => {
           if (resp.data === 'error') {
             toast.error('Server Error');

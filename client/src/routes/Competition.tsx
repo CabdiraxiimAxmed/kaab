@@ -26,7 +26,7 @@ type EndingTime = {
 
 type CompetitionData = {
   id: number;
-  questionid: number[];
+  question_id: number;
   starting_time: StartingTime;
   ending_time: EndingTime;
   created_date: string;
@@ -99,7 +99,7 @@ const Competition: React.FC = () => {
         <CompetitionPage
           startingTime={competitionData?.starting_time}
           endingTime={competitionData?.ending_time}
-          questionId={competitionData?.questionid}
+          question_id={competitionData?.question_id}
           competitionId={competitionData?.id}
         />
       ) : (
