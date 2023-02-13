@@ -426,6 +426,27 @@
   justify-content: center;
 }
 
+/* Competition page */
+.users-info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.users-info table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+.users-info td,
+th {
+  border: 1px solid #4d6492;
+  text-align: left;
+  padding: 10px;
+}
+
+
+
 /* Page not found file */
 .page-not-found-container {
   position: absolute;

@@ -7,6 +7,7 @@ import PageNotFound from './routes/PageNotFound';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Home from './routes/Home';
 import Competition from './routes/Competition';
+import CompetitionInfo from './routes/CompetitionInfo';
 import Header from './routes/Header';
 import Problem from './routes/Problem';
 import io from 'socket.io-client';
@@ -29,6 +30,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/home" element={<Home />} />
           <Route path="/competition/:competitionId" element={<Competition />} />
+          <Route path="/competitionInfo/:competitionId" element={<CompetitionInfo />} />
           <Route path="/share/:roomId" element={<Shared />} />
           <Route path="/profile" element={<User />} />
           <Route path="/problem/:id" element={<Problem />} />
