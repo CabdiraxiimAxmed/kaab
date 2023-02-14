@@ -9,10 +9,11 @@ router.post('/', async(req, res) => {
     if (resp.rows.length > 0) {
       res.send('room-exist').end();
     } else {
-      await client.query(`INSERT INTO rooms(users) VALUES('{}')`);
+      await client.query(`INSERT INTO rooms(users, room_id) VALUES('{}', '${roomId}')`);
       res.send('room-created').end();
     }
   } catch(err) {
+    console.log(err.message);
     res.send('error');
   }
 });

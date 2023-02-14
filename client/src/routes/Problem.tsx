@@ -25,12 +25,14 @@ type ProblemType = {
 
 type UserJoined = {
   username: string;
-  roomId: number;
+  roomId: string;
   users: { username: string, socketId: string }[];
 }
 
 const Problem: React.FC = () => {
   const [userLanguage, setUserLanguage] = useState<string>('javascript');
+  const [roomId, setRoomId] = useState<string>();
+  const [isShared, setIshared] = useState<boolean>(false);
   const { socket } = useContext(SocketContext) as Value;
   const [checked, setChecked] = useState<{ javascript: boolean, python: boolean }>({ javascript: true, python: false });
   const [problem, setProblem] = useState<ProblemType>({
@@ -64,6 +66,8 @@ const Problem: React.FC = () => {
   useEffect(() => {
     socket.on('user-joined', (data: UserJoined) => {
       let { username, roomId, users } = data;
+      setRoomId(roomId);
+      setIshared(true);
       if (userDefaultLanguage?.code) {
         let codeData = { language: userDefaultLanguage, question: problem.question, id: problem.id }
         socket.emit('shareCodeData', { roomId, codeData });
@@ -80,7 +84,7 @@ const Problem: React.FC = () => {
     setUserLanguage(language);
   }
 
-
+  console.log('problem file:', roomId);
   return (
     <>
       <ToastContainer
@@ -120,6 +124,8 @@ const Problem: React.FC = () => {
               id={problem.id}
               language={userLanguage}
               isCompetition={false}
+              roomId={roomId}
+              isShared={isShared}
             />
           </div>
         )}

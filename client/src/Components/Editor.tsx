@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { SocketContext, Value } from '../app/Socket';
-import { StreamLanguage } from '@codemirror/language';
 import { StartingTime, EndingTime } from '../routes/Competition';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import { vim } from '@replit/codemirror-vim';
@@ -17,9 +16,11 @@ interface Props {
   startingTime?: StartingTime;
   isCompetition: boolean;
   competitionId?: number;
+  roomId?: string;
+  isShared?: boolean;
 }
 
-const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id, language, startingTime, isCompetition, competitionId }) => {
+const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id, language, startingTime, isCompetition, competitionId, roomId, isShared }) => {
   const { socket } = useContext(SocketContext) as Value;
   const [code, setCode] = useState<string>('');
   const [extensions, setExtensions] = useState<any[]>([
@@ -52,8 +53,8 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id, language, s
   function handleEditorChange(value = '') {
     // TODO: change this later
     //
-    if (true) {
-      socket.emit('shareCodeText', {roomId: 1, value });
+    if (isShared) {
+      socket.emit('shareCodeText', {roomId, value });
     }
     setCode(value);
   }

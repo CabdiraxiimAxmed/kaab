@@ -28,14 +28,14 @@ const ShareButton: React.FC<Probs> = ({ displayShareButton }) => {
   }, [socket]);
 
   const handleShare = ():void => {
-    axios.post('/api/rooms/', {roomId: 1})
+    axios.post('/api/rooms/', {roomId: user.username})
       .then(resp => {
         if (resp.data === 'error') {
           toast.error('server error');
           return;
         }
-       setIsShared(true);
-        socket.emit('share', {roomId: 1, username: user.username });
+        setIsShared(true);
+        socket.emit('share', {roomId: user.username, username: user.username });
     }) .catch(error => {
         toast.error(error.message);
       });

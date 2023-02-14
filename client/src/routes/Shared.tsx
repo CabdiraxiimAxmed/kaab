@@ -69,6 +69,8 @@ const Shared: React.FC = () => {
               language={problem.language.language}
               isCompetition={false}
               id={problem.id}
+              roomId={roomId}
+              isShared={true}
             />
           </div>
         )}
