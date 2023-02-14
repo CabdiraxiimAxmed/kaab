@@ -30,10 +30,12 @@ type CompetitionData = {
   starting_time: StartingTime;
   ending_time: EndingTime;
   created_date: string;
+  starting_date: string;
 }
 
 const Competition: React.FC = () => {
   const [competitionData, setCompetitionData] = useState<CompetitionData>();
+  const [competitionStatus, setCompetitionStatus] = useState<string>('wait');
   const { competitionId } = useParams();
   const [remainingTime, setRemainingTime] = useState<Time>({
     hours: 0,
@@ -59,10 +61,12 @@ const Competition: React.FC = () => {
           return;
         }
         setCompetitionData(resp.data);
-        // checks if the competition is ended.
-        if (false) {
-
-        } else {
+        let result: string = compareDates(resp.data.starting_date);
+        if (result === 'ended') {
+          setCompetitionStatus('ended');
+        } else if (result === 'wait') {
+          setCompetitionStatus('wait');
+        }else {
           let intervalid = setInterval(() => {
             let remainingTimeInSeconds = getRemainingTime(resp.data.starting_time);
             if (!remainingTimeInSeconds) {
@@ -77,7 +81,6 @@ const Competition: React.FC = () => {
         toast.error(error.message);
       })
   }, [])
-
   // this checks if the time is up.
   const time = `${remainingTime.hours}:${remainingTime.minutes}:${remainingTime.seconds}`;
   let isTheTime = time === "00:00:00";
@@ -95,7 +98,7 @@ const Competition: React.FC = () => {
         draggable
         theme="dark"
       />
-      {isTheTime ? (
+      {isTheTime && competitionStatus !== 'ended'  ? (
         <CompetitionPage
           startingTime={competitionData?.starting_time}
           endingTime={competitionData?.ending_time}
@@ -105,14 +108,40 @@ const Competition: React.FC = () => {
       ) : (
           <div className="competition-container">
             <div className="competition-wrapper">
-              <h2 className="competition-title">Waxaa dhiman</h2>
-              <h3 className="timer">{time}</h3>
+              {competitionStatus === 'ended' ? (
+                  <>
+                    <h2 className="competition-title">Tartanka wuu dhamaaday</h2>
+                  </>
+              ):(
+                  <>
+                    <h2 className="competition-title">Waxaa dhiman</h2>
+                    <h2>{competitionData?.created_date}</h2>
+                    <h3 className="timer">{time}</h3>
+                  </>
+                )
+              }
             </div>
           </div>
         )}
     </>
 
   );
+}
+
+const compareDates = (startingDate: string): string => {
+  // get current date.
+  let date = new Date();
+  let day: string | number = date.getDate() < 10 ? `0${date.getDate()}`: date.getDate();
+  let month: string | number = date.getMonth() + 1 < 9 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+  let year = date.getFullYear();
+  let currentDate = `${year}${month}${day}`
+  console.log(startingDate, currentDate);
+  if (parseInt(currentDate) > parseInt(startingDate)) {
+    return 'ended';
+  } else if (parseInt(currentDate) < parseInt(startingDate)) {
+    return 'wait';
+  }
+  return 'start'
 }
 
 export type { StartingTime, EndingTime }
