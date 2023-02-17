@@ -23,6 +23,7 @@ const ShareButton: React.FC<Probs> = ({ displayShareButton }) => {
 
   useEffect(() => {
     socket.on('joined', (users: {users: SocketUsers[]}) => {
+      console.log("users", users);
       setSocketUsers(users.users);
     })
   }, [socket]);

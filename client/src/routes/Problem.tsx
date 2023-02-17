@@ -84,7 +84,6 @@ const Problem: React.FC = () => {
     setUserLanguage(language);
   }
 
-  console.log('problem file:', roomId);
   return (
     <>
       <ToastContainer

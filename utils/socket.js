@@ -65,7 +65,10 @@ const socketConnection = server => {
             await client.query(`UPDATE rooms set users = ARRAY_APPEND(users, '${jsonUser}') WHERE room_id='${roomId}'`);
           }
         }
-        io.to(room.room_id).emit('joined', { users: room.users });
+        console.log("These are");
+        let users = await client.query(`SELECT users FROM rooms WHERE room_id='${roomId}'`);
+        users = users.rows[0].users;
+        io.to(room.room_id).emit('joined', { users });
         socket.to(room.room_id).emit('user-joined', {
           username,
           roomId,
