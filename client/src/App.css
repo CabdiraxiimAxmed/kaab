@@ -169,7 +169,7 @@
   color: green;
 }
 
-/* problem file */
+/* Problem file */
 .question-editor-result-container {
   display: grid;
   grid-template-columns: 35% 45% 20%;
@@ -188,6 +188,8 @@
 }
 .markdown-text p {
   font-size: 15px;
+}
+.chat-result-wrapper { 
 }
 /* Editor file */
 .editor-container {
@@ -320,6 +322,47 @@
 }
 .javascript-failed-message .message-expected {
   color: #00b200;
+}
+
+/*Chat file*/
+.chat-container {
+  border-left: 0.1px solid #4d6492;
+  height: 85vh;
+  position: relative;
+}
+.chat-input-container {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+}
+.chat-input-container input {
+  outline: none;
+}
+.send-chat-button {
+  background-color: transparent;
+  padding: 0;
+}
+.chat-display {
+  padding:0px 5px; 
+  height: 80vh;
+}
+.chat-message .left {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 10px 10px 10px 0px;
+  margin: 10px;
+  background-color: #86BB71;
+}
+
+.chat-message .right {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 10px 10px 0px 10px;
+  margin: 10px;
+  background-color: #94C2ED;
+}
+.chat-message .left .sender, .chat-message .right .sender{
+  color: white;
 }
 
 /* user profile file */

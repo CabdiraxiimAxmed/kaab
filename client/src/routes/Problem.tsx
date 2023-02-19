@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import QuestionText from '../Components/QuestionText';
+import Chat from '../Components/Chat';
 import { FaJsSquare } from 'react-icons/fa';
 import { FaPython } from 'react-icons/fa';
 import Editor from '../Components/Editor';
@@ -31,6 +32,7 @@ type UserJoined = {
 
 const Problem: React.FC = () => {
   const [userLanguage, setUserLanguage] = useState<string>('javascript');
+  const [displayChat, setDisplayChat] = useState<boolean>(true);
   const [roomId, setRoomId] = useState<string>();
   const [isShared, setIshared] = useState<boolean>(false);
   const { socket } = useContext(SocketContext) as Value;
@@ -128,7 +130,16 @@ const Problem: React.FC = () => {
             />
           </div>
         )}
-        <Result displayShareButton={true} />
+        <div className="chat-result-wrapper">
+          <div className='chat-result-header'>
+            <button className='chat-button' onClick={ () => setDisplayChat(true)}> sheeko </button>
+            <button className='result-button' onClick={ () => setDisplayChat(false)}> Natiijada </button>
+          </div>
+          <div className='chat-result-container'>
+            {displayChat && <Chat /> }
+            {!displayChat && <Result displayShareButton={true} />}
+          </div>
+        </div>
       </div>
     </>
   );
