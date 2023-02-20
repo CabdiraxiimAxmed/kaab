@@ -10,6 +10,56 @@ let chats = [
   { username: 'abdi', message: 'How you doing folks?' },
   { username: 'Ali', message: 'No problem.' },
   { username: 'faarah', message: 'Where were you?' },
+  { username: 'abdi', message: 'Hello' },
+  { username: 'faarah', message: 'Hi' },
+  { username: 'abdi', message: 'How you doing folks?' },
+  { username: 'Ali', message: 'No problem.' },
+  { username: 'faarah', message: 'Where were you?' },
+  { username: 'abdi', message: 'Hello' },
+  { username: 'faarah', message: 'Hi' },
+  { username: 'abdi', message: 'How you doing folks?' },
+  { username: 'Ali', message: 'No problem.' },
+  { username: 'faarah', message: 'Where were you?' },
+  { username: 'abdi', message: 'Hello' },
+  { username: 'faarah', message: 'Hi' },
+  { username: 'abdi', message: 'How you doing folks?' },
+  { username: 'Ali', message: 'No problem.' },
+  { username: 'faarah', message: 'Where were you?' },
+  { username: 'abdi', message: 'Hello' },
+  { username: 'faarah', message: 'Hi' },
+  { username: 'abdi', message: 'How you doing folks?' },
+  { username: 'Ali', message: 'No problem.' },
+  { username: 'faarah', message: 'Where were you?' },
+  { username: 'abdi', message: 'Hello' },
+  { username: 'faarah', message: 'Hi' },
+  { username: 'abdi', message: 'How you doing folks?' },
+  { username: 'Ali', message: 'No problem.' },
+  { username: 'faarah', message: 'Where were you?' },
+  { username: 'abdi', message: 'Hello' },
+  { username: 'faarah', message: 'Hi' },
+  { username: 'abdi', message: 'How you doing folks?' },
+  { username: 'Ali', message: 'No problem.' },
+  { username: 'faarah', message: 'Where were you?' },
+  { username: 'abdi', message: 'Hello' },
+  { username: 'faarah', message: 'Hi' },
+  { username: 'abdi', message: 'How you doing folks?' },
+  { username: 'Ali', message: 'No problem.' },
+  { username: 'faarah', message: 'Where were you?' },
+  { username: 'abdi', message: 'Hello' },
+  { username: 'faarah', message: 'Hi' },
+  { username: 'abdi', message: 'How you doing folks?' },
+  { username: 'Ali', message: 'No problem.' },
+  { username: 'faarah', message: 'Where were you?' },
+  { username: 'abdi', message: 'Hello' },
+  { username: 'faarah', message: 'Hi' },
+  { username: 'abdi', message: 'How you doing folks?' },
+  { username: 'Ali', message: 'No problem.' },
+  { username: 'faarah', message: 'Where were you?' },
+  { username: 'abdi', message: 'Hello' },
+  { username: 'faarah', message: 'Hi' },
+  { username: 'abdi', message: 'How you doing folks?' },
+  { username: 'Ali', message: 'No problem.' },
+  { username: 'faarah', message: 'Where were you?' },
 ]
 const Chat:React.FC = () => {
   const { socket } = useContext(SocketContext) as Value;
@@ -20,14 +70,16 @@ const Chat:React.FC = () => {
   return (
     <div className='chat-container'>
       <div className='chat-display'>
-        {chats.map((chat, index: number) => (
-          <div key={index} className={`chat-message`}>
-            <div className= {`${chat.username===user.username ? 'right' : 'left'}`}>
-              <p className='sender'> { chat.username} </p>
-              <p> {chat.message} </p>
+        <div className='chat-box'>
+          {chats.map((chat, index: number) => (
+            <div key={index} className={`chat-message`}>
+              <div className= {`${chat.username===user.username ? 'right' : 'left'}`}>
+                <p className='sender'> { chat.username} </p>
+                <p> {chat.message} </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
       <form onSubmit={handleSubmit} className='chat-input-container'>
         <input />
