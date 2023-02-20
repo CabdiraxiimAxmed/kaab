@@ -13,20 +13,14 @@ type SocketUsers = {
 
 interface Probs {
   displayShareButton: boolean;
+  socketUsers?: SocketUsers[]
 } 
 
-const ShareButton: React.FC<Probs> = ({ displayShareButton }) => {
+const ShareButton: React.FC<Probs> = ({ displayShareButton, socketUsers }) => {
   const [isShared, setIsShared] = useState<boolean>(false);
   const user = useSelector((state: RootState) => state.user.value);
-  const [socketUsers, setSocketUsers] = useState<SocketUsers[]>();
   const { socket } = useContext(SocketContext) as Value;
 
-  useEffect(() => {
-    socket.on('joined', (users: {users: SocketUsers[]}) => {
-      console.log("users", users);
-      setSocketUsers(users.users);
-    })
-  }, [socket]);
 
   const handleShare = ():void => {
     axios.post('/api/rooms/', {roomId: user.username})

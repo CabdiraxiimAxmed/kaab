@@ -116,7 +116,6 @@ const runCode = (container, codeData) => {
         const result = data.toString();
         let regex = /[a-zA-Z0-9_.-]+/g;
         let codeResult = result.match(regex);
-        console.log(codeResult.join(' '));
         socket.emit('codeResult', codeResult.join(' '));
       });
     });

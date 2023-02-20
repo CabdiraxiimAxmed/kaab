@@ -27,8 +27,6 @@ const UserReport: React.FC = () => {
       })
   }, [])
 
-  console.log(reportData);
-
   return (
     <div className='user-report-container'>
       <div className='card question-answered'>

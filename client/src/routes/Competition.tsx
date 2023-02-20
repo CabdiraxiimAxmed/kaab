@@ -135,7 +135,6 @@ const compareDates = (startingDate: string): string => {
   let month: string | number = date.getMonth() + 1 < 9 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
   let year = date.getFullYear();
   let currentDate = `${year}${month}${day}`
-  console.log(startingDate, currentDate);
   if (parseInt(currentDate) > parseInt(startingDate)) {
     return 'ended';
   } else if (parseInt(currentDate) < parseInt(startingDate)) {

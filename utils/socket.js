@@ -14,7 +14,6 @@ const socketConnection = server => {
     // Running and testing javascript code here
     socket.on('runJavascriptCode', codeData => {
       const { language } = codeData;
-      console.log(codeData);
       socket.emit('start-loading', language);
       javascriptRunCode({ ...codeData, socket });
     });
@@ -27,13 +26,11 @@ const socketConnection = server => {
     // Running and testing python code here
     socket.on('runPythonCode', codeData => {
       const { language } = codeData;
-      console.log(codeData);
       //socket.emit('start-loading', language);
       pythonRunCode({ ...codeData, socket });
     });
 
     socket.on('testPythonCode', codeData => {
-      console.log('testing python code.');
       const { language } = codeData;
       socket.emit('start-loading', language);
       pythonTestCode({ ...codeData, socket });
@@ -41,23 +38,23 @@ const socketConnection = server => {
 
 
     // For sharing code.
-    socket.on('share', async({ roomId, username }) => {
+    socket.on('share', async ({ roomId, username }) => {
       try {
         let resp = await client.query(`SELECT * FROM rooms WHERE room_id='${roomId}'`);
         let room = resp.rows[0];
         // find if the user exist.
         const user = room.users.find(user => user.username === username);
-        let userData = JSON.stringify({username, socketId: socket.id });
+        let userData = JSON.stringify({ username, socketId: socket.id });
         socket.join(room.room_id);
         if (!user) {
           await client.query(`UPDATE rooms set users = ARRAY_APPEND(users, '${userData}') WHERE room_id='${roomId}'`);
         } else {
           user.socketId = socket.id;
           // change the array to json before saving
-          for(let i = 0; i < room.users.length; i++) {
-          // change the array to json before saving
+          for (let i = 0; i < room.users.length; i++) {
+            // change the array to json before saving
             let jsonUser = JSON.stringify(room.users[i]);
-            if(i == 0) {
+            if (i == 0) {
               await client.query(`UPDATE rooms set users = '{}' WHERE room_id='${roomId}'`);
               await client.query(`UPDATE rooms set users = ARRAY_APPEND(users, '${jsonUser}') WHERE room_id='${roomId}'`);
               continue;
@@ -65,37 +62,37 @@ const socketConnection = server => {
             await client.query(`UPDATE rooms set users = ARRAY_APPEND(users, '${jsonUser}') WHERE room_id='${roomId}'`);
           }
         }
-        console.log("These are");
         let users = await client.query(`SELECT users FROM rooms WHERE room_id='${roomId}'`);
         users = users.rows[0].users;
         io.to(room.room_id).emit('joined', { users });
-        socket.to(room.room_id).emit('user-joined', {
+        io.to(room.room_id).emit('user-joined', {
           username,
           roomId,
           users: room.users,
         });
-      } catch(err) {
+      } catch (err) {
 
         //TODO: this is not handled
         socket.emit('share-error', "Error on sharing user");
       }
 
-      socket.on('shareCodeData', async({roomId, codeData}) => {
-        console.log("sharing code");
-        console.log(codeData);
+      socket.on('shareCodeData', async ({ roomId, codeData }) => {
         try {
           let response = await client.query(`SELECT * FROM rooms WHERE room_id='${roomId}'`);
           let room = response.rows[0];
           socket.to(room.room_id).emit('codeData', codeData);
-        } catch(err) {
+        } catch (err) {
           socket.emit('code-error', "error on sharing code data");
         }
       });
 
-      socket.on('shareCodeText', ({roomId, value}) => {
+      socket.on('shareCodeText', ({ roomId, value }) => {
         socket.to(roomId).emit('code', value);
       })
 
+    })
+    socket.on('chatText', ({ roomId, chatMessages }) => {
+      socket.to(roomId).emit('chatText', chatMessages);
     })
   });
 };

@@ -94,7 +94,6 @@ function testCode(codeData, container) {
         if (json) {
           let isPassed = testResult.success;
           if (isCompetition && isPassed) {
-            console.log("competition section");
             let { timeTook, totalSeconds } = timeCompleted(startingTime);
             let userData = JSON.stringify({ username, timeTook, totalSeconds });
             try {

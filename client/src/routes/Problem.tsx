@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
 import QuestionText from '../Components/QuestionText';
-import Chat from '../Components/Chat';
 import { FaJsSquare } from 'react-icons/fa';
 import { FaPython } from 'react-icons/fa';
 import Editor from '../Components/Editor';
@@ -8,7 +7,12 @@ import { SocketContext, Value } from '../app/Socket';
 import { ToastContainer, toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import Result from '../Components/Result';
+import ChatResult from '../Components/ChatResult';
+
+type SocketUsers = {
+  username: string;
+  socketId: string
+}
 
 type Languages = {
   file: string;
@@ -32,8 +36,8 @@ type UserJoined = {
 
 const Problem: React.FC = () => {
   const [userLanguage, setUserLanguage] = useState<string>('javascript');
-  const [displayChat, setDisplayChat] = useState<boolean>(true);
   const [roomId, setRoomId] = useState<string>();
+  const [socketUsers, setSocketUsers] = useState<SocketUsers[]>();
   const [isShared, setIshared] = useState<boolean>(false);
   const { socket } = useContext(SocketContext) as Value;
   const [checked, setChecked] = useState<{ javascript: boolean, python: boolean }>({ javascript: true, python: false });
@@ -68,7 +72,9 @@ const Problem: React.FC = () => {
   useEffect(() => {
     socket.on('user-joined', (data: UserJoined) => {
       let { username, roomId, users } = data;
+      // TODO: if the other one works delete this one.
       setRoomId(roomId);
+      setSocketUsers(users);
       setIshared(true);
       if (userDefaultLanguage?.code) {
         let codeData = { language: userDefaultLanguage, question: problem.question, id: problem.id }
@@ -130,16 +136,7 @@ const Problem: React.FC = () => {
             />
           </div>
         )}
-        <div className="chat-result-wrapper">
-          <div className='chat-result-header'>
-            <button className='chat-button' onClick={ () => setDisplayChat(true)}> sheeko </button>
-            <button className='result-button' onClick={ () => setDisplayChat(false)}> Natiijada </button>
-          </div>
-          <div className='chat-result-container'>
-            {displayChat && <Chat /> }
-            {!displayChat && <Result displayShareButton={true} />}
-          </div>
-        </div>
+        <ChatResult socketUsers={socketUsers} roomId={roomId} />
       </div>
     </>
   );
@@ -147,4 +144,4 @@ const Problem: React.FC = () => {
 
 
 export default Problem;
-export type { ProblemType, Languages };
+export type { ProblemType, Languages, SocketUsers };

@@ -4,6 +4,7 @@ import { RootState } from '../app/store';
 import { toast } from 'react-toastify';
 import ShareButton from '../Components/ShareButton';
 import { CirclesWithBar } from  'react-loader-spinner'
+import { SocketUsers } from '../routes/Problem';
 import { useSelector } from 'react-redux';
 import JavascriptFailedMessage from './JavascriptFailedMessage';
 import PythonFailedMessage from './PythonFailedMessages';
@@ -24,9 +25,10 @@ type CodeResultType = {
 
 interface Probs {
   displayShareButton: boolean;
+  socketUsers?: SocketUsers[];
 }
 
-const Result: React.FC<Probs> = ({ displayShareButton }) => {
+const Result: React.FC<Probs> = ({ displayShareButton, socketUsers }) => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.value);
   const { socket } = useContext(SocketContext) as Value;
@@ -130,7 +132,7 @@ const Result: React.FC<Probs> = ({ displayShareButton }) => {
         {displayJavascriptFailedMessage && ( <JavascriptFailedMessage messages={javascriptFailedMessage} />)}
         {displayPythonFailedMessage && ( <PythonFailedMessage messages={pythonFailedMessages} />)}
       </div>
-      <ShareButton  displayShareButton={displayShareButton}/>
+      <ShareButton  displayShareButton={displayShareButton} socketUsers={socketUsers}/>
     </div>
   );
 };

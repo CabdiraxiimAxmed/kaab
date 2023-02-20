@@ -65,7 +65,6 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id, language, s
       socket.emit('runPythonCode', { code, file, folder, language, username: user.username });
   };
   const testCode = () => {
-    console.log(isCompetition);
     if (language === 'javascript')
       socket.emit('testJavascriptCode', { questionId: id, code, file, folder, language, username: user.username, isCompetition, startingTime, competitionId });
     else if (language === 'python')

@@ -3,10 +3,11 @@ import { SocketContext, Value } from '../app/Socket';
 import { FaJsSquare } from 'react-icons/fa';
 import { FaPython } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
-import Result from '../Components/Result'
+import ChatResult from '../Components/ChatResult'
 import Editor from '../Components/Editor'
 import QuestionText from '../Components/QuestionText'
 import { RootState } from '../app/store';
+import { SocketUsers } from './Problem';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -16,6 +17,7 @@ type SharedProblemType = {
   id: number;
 }
 const Shared: React.FC = () => {
+  const [socketUsers, setSocketUsers] = useState<SocketUsers[]>();
   const { username } = useSelector((state: RootState) => state.user.value);
   const [problem, setProblem] = useState<SharedProblemType>({
     language: { code: '', file: '', folder: '', language: '', srcPath: '' },
@@ -29,12 +31,11 @@ const Shared: React.FC = () => {
     if(username) {
       let data = {roomId, username };
       socket.emit('share', data);
-      socket.on('joined', (users: any) => {
-        // do some stuff.
+      socket.on('joined', (users: {users: SocketUsers[]}) => {
+        setSocketUsers(users.users);
       })
     }
     socket.on('codeData', (codeData: SharedProblemType) => {
-      console.log('This is the final one');
       setProblem(codeData);
     })
   }, [username]);
@@ -74,7 +75,7 @@ const Shared: React.FC = () => {
             />
           </div>
         )}
-        <Result displayShareButton={false} />
+        <ChatResult socketUsers={socketUsers} roomId={roomId} />
       </div>
 
     </>
