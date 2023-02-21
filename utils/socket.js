@@ -91,9 +91,13 @@ const socketConnection = server => {
       })
 
     })
+    // Sending and receiving chats.
     socket.on('chatText', ({ roomId, chatMessages }) => {
       socket.to(roomId).emit('chatText', chatMessages);
     })
+    socket.on('typing', ({ isTyping, username, roomId}) => {
+      socket.to(roomId).emit('typing', { isTyping, username })
+    });
   });
 };
 
