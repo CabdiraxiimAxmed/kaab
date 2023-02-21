@@ -29,6 +29,7 @@ const Chat: React.FC<Props> = ({ roomId, chatMessages }) => {
       let chatMessages = [...otherChatText, data];
       setOtherChatText([...otherChatText, data]);
       socket.emit('chatText', { roomId, chatMessages });
+      setChatText('');
     }
   }
   return (
@@ -46,7 +47,7 @@ const Chat: React.FC<Props> = ({ roomId, chatMessages }) => {
         </div>
       </div>
       <form onSubmit={handleSubmit} className='chat-input-container'>
-        <input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setChatText(e.target.value)} />
+        <input value={chatText} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setChatText(e.target.value)} />
         <button className='send-chat-button'> <FaPaperPlane /> </button>
       </form>
     </div>
