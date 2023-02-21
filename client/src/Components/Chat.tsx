@@ -24,10 +24,12 @@ const Chat: React.FC<Props> = ({ roomId, chatMessages }) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    let data = { username: user.username, chat: chatText };
-    let chatMessages = [...otherChatText, data];
-    setOtherChatText([...otherChatText, data]);
-    socket.emit('chatText', { roomId, chatMessages });
+    if(chatText) {
+      let data = { username: user.username, chat: chatText };
+      let chatMessages = [...otherChatText, data];
+      setOtherChatText([...otherChatText, data]);
+      socket.emit('chatText', { roomId, chatMessages });
+    }
   }
   return (
     <div className='chat-container'>
