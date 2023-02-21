@@ -517,3 +517,15 @@ th {
   border: 2px solid #d9d9d9;
   border-radius: 10px;
 }
+/*Media query*/
+@media screen and (max-width: 686px) {
+  .question-editor-result-container {
+    width: 92%;
+    display: grid;
+    grid-template-columns:60% 50%;
+  }
+  /* QuestionText file */
+  .question-text-container {
+    display: none;
+  }
+}
