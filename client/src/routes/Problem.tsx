@@ -70,11 +70,19 @@ const Problem: React.FC = () => {
   let userDefaultLanguage: Languages | undefined = getDefaultCodeLanguage(problem.languages);
 
   useEffect(() => {
+    socket.on('users', (users: {users: SocketUsers[]}) => {
+      setSocketUsers(users.users);
+    })
+    socket.on('user-left', (username: string) => {
+      toast.warn(`${username} wuu baxay!!!`)
+    })
+    socket.on('new-user', (username: string) => {
+      toast.success(`${username} wuu yimid!!!`)
+    })
     socket.on('user-joined', (data: UserJoined) => {
       let { username, roomId, users } = data;
       // TODO: if the other one works delete this one.
       setRoomId(roomId);
-      setSocketUsers(users);
       setIshared(true);
       if (userDefaultLanguage?.code) {
         let codeData = { language: userDefaultLanguage, question: problem.question, id: problem.id }

@@ -17,7 +17,7 @@ const ChatResult: React.FC<Props> = ({ socketUsers, roomId }) => {
     });
   }, [socket, chatMessages])
 
-  const [displayChat, setDisplayChat] = useState<boolean>(true);
+  const [displayChat, setDisplayChat] = useState<boolean>(false);
   return (
     <div className="chat-result-wrapper">
       <div className='chat-result-header'>

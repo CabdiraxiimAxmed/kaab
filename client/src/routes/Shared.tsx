@@ -31,10 +31,16 @@ const Shared: React.FC = () => {
     if(username) {
       let data = {roomId, username };
       socket.emit('share', data);
-      socket.on('joined', (users: {users: SocketUsers[]}) => {
+      socket.on('users', (users: {users: SocketUsers[]}) => {
         setSocketUsers(users.users);
       })
     }
+    socket.on('user-left', (username: string) => {
+      toast.warn(`${username} wuu baxay!!!`)
+    })
+    socket.on('new-user', (username: string) => {
+      toast.success(`${username} wuu yimid!!!`)
+    })
     socket.on('codeData', (codeData: SharedProblemType) => {
       setProblem(codeData);
     })

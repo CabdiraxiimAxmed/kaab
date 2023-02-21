@@ -10,6 +10,7 @@ let io;
 const socketConnection = server => {
   io = socket(server);
   io.on('connection', socket => {
+    console.log("user connected", socket.id);
     socket.emit('message', 'connected');
     // Running and testing javascript code here
     socket.on('runJavascriptCode', codeData => {
@@ -64,7 +65,8 @@ const socketConnection = server => {
         }
         let users = await client.query(`SELECT users FROM rooms WHERE room_id='${roomId}'`);
         users = users.rows[0].users;
-        io.to(room.room_id).emit('joined', { users });
+        io.to(room.room_id).emit('users', { users });
+        socket.to(room.room_id).emit('new-user', username);
         io.to(room.room_id).emit('user-joined', {
           username,
           roomId,
@@ -97,6 +99,21 @@ const socketConnection = server => {
     })
     socket.on('typing', ({ isTyping, username, roomId}) => {
       socket.to(roomId).emit('typing', { isTyping, username })
+    });
+
+    // if user disconnects.
+    socket.on('disconnect', async() => {
+      let socketId = socket.id;
+      let response = await client.query('SELECT * FROM rooms');
+      let rooms = response.rows;
+      let room = rooms.find(room => room.users.find(user => user.socketId === socketId));
+      if(room) {
+        let users = room.users.filter(user => user.socketId !== socketId);
+        let userLeft = room.users.filter(user => user.socketId === socketId)[0].username;
+        console.log(userLeft);
+        socket.to(room.room_id).emit('users', { users });
+        socket.to(room.room_id).emit("user-left", userLeft);
+      }
     });
   });
 };
