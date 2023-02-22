@@ -45,16 +45,15 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id, language, s
       ])
     }
 
-    socket.on('code', (value: string) => {
-      setCode(value)
+    socket.on('shareCodeText', (value: string) => {
+      handleEditorChange(value, false)
     });
   }, [socket, language])
 
-  function handleEditorChange(value = '') {
-    // TODO: change this later
-    //
-    if (isShared) {
+  function handleEditorChange(value = '', share: boolean) {
+    if (isShared && share) {
       socket.emit('shareCodeText', {roomId, value });
+      return;
     }
     setCode(value);
   }
@@ -78,7 +77,11 @@ const Editor: React.FC<Props> = ({ preWrittenCode, file, folder, id, language, s
         height='90vh'
         theme='light'
         extensions={extensions}
-        onChange={(value: string, viewUpdate: any) => handleEditorChange(value)}
+        onChange={(value: string, viewUpdate: any) => {
+          let length: number = viewUpdate.changes.inserted[1]?.text.length;
+          if (length === undefined) handleEditorChange(value, false)
+          else handleEditorChange(value, true)
+        }}
       />
       <div className="editor-btns-container">
         <button className="run" onClick={runCode}>

@@ -89,7 +89,7 @@ const socketConnection = server => {
       });
 
       socket.on('shareCodeText', ({ roomId, value }) => {
-        socket.to(roomId).emit('code', value);
+        socket.to(roomId).emit('shareCodeText', value);
       })
 
     })
