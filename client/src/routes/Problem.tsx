@@ -34,13 +34,13 @@ type UserJoined = {
   users: { username: string, socketId: string }[];
 }
 
+const SUPPORTED_LANGUAGES = ['javascript', 'python'];
 const Problem: React.FC = () => {
   const [userLanguage, setUserLanguage] = useState<string>('javascript');
   const [roomId, setRoomId] = useState<string>();
   const [socketUsers, setSocketUsers] = useState<SocketUsers[]>();
   const [isShared, setIshared] = useState<boolean>(false);
   const { socket } = useContext(SocketContext) as Value;
-  const [checked, setChecked] = useState<{ javascript: boolean, python: boolean }>({ javascript: true, python: false });
   const [problem, setProblem] = useState<ProblemType>({
     languages: [{ file: '', code: '', srcPath: '', language: '', folder: '' }],
     question: '',
@@ -65,9 +65,21 @@ const Problem: React.FC = () => {
       });
   }, []);
 
-  const getDefaultCodeLanguage = (languages: Languages[]) => languages.find((language: Languages) => language.language === userLanguage);
+  const getDefaultCodeLanguage = (languages: Languages[], term: string) => languages.find((language: Languages) => language?.language === term);
+  let userDefaultLanguage: Languages= getDefaultCodeLanguage(problem.languages, userLanguage) || problem.languages[0];
 
-  let userDefaultLanguage: Languages | undefined = getDefaultCodeLanguage(problem.languages);
+  const isSupported = ():{javascript: boolean; python: boolean} => {
+    let result = {javascript: false, python: false};
+    for(let language of SUPPORTED_LANGUAGES) {
+      let isSupported: Languages | undefined = getDefaultCodeLanguage(problem.languages, language);
+      if(isSupported) {
+        result = {...result, [language]: true};
+      } else {
+        result = {...result, [language]: false};
+      }
+    }
+    return result;
+  };
 
   useEffect(() => {
     socket.on('users', (users: {users: SocketUsers[]}) => {
@@ -92,11 +104,6 @@ const Problem: React.FC = () => {
   }, [socket, userDefaultLanguage]);
 
   const handleLanguageChange = (language: string): void => {
-    if (language === 'javascript') {
-      setChecked({ javascript: true, python: false });
-    } else if (language === 'python') {
-      setChecked({ javascript: false, python: true });
-    }
     setUserLanguage(language);
   }
 
@@ -124,8 +131,9 @@ const Problem: React.FC = () => {
                   luuqadaha
                 </button>
                 <div className="dropdown-content">
-                  <button className='language-change-button' onClick={() => handleLanguageChange('javascript')}> <FaJsSquare /> Javascript </button>
-                  <button className='language-change-button' onClick={() => handleLanguageChange('python')}> <FaPython /> Python </button>
+                  <button
+                    disabled={!isSupported().javascript} className='language-change-button' onClick={() => handleLanguageChange('javascript')}> <FaJsSquare /> Javascript </button>
+                  <button disabled={!isSupported().python} className='language-change-button' onClick={() => handleLanguageChange('python')}> <FaPython /> Python </button>
                 </div>
               </div>
               <div className="file-name-container">
