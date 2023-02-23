@@ -10,6 +10,7 @@ interface Props {
 }
 const ChatResult: React.FC<Props> = ({ socketUsers, roomId }) => {
   const { socket }  = useContext(SocketContext) as Value;
+  const [chatButtonText, setChatButtonText] = useState<string>('sheeko');
   const [ chatMessages, setChatMessages ] = useState<{username: string; chat: string}[]>([{username: '', chat: ''}]);
   useEffect(() => {
     socket.on('chatText', (data: {username: string; chat: string}[]) => {
@@ -21,7 +22,12 @@ const ChatResult: React.FC<Props> = ({ socketUsers, roomId }) => {
   return (
     <div className="chat-result-wrapper">
       <div className='chat-result-header'>
-        <button className='chat-button' onClick={() => setDisplayChat(true)}> sheeko </button>
+        <button
+          onMouseEnter={() => setChatButtonText('chat')}
+          onMouseLeave={() => setChatButtonText('sheeko')}
+          className='chat-button' onClick={() => setDisplayChat(true)}>
+          {chatButtonText}
+        </button>
         <button className='result-button' onClick={() => setDisplayChat(false)}> Natiijada </button>
       </div>
       <div className='chat-result-container'>
