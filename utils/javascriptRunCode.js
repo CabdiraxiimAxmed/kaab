@@ -104,7 +104,7 @@ const runCode = (container, codeData) => {
   const { socket, language , file, folder } = codeData;
   let execWritingOptions = {
     Cmd: language === 'javascript' ?['bash', '-c', `node /app/javascript/${folder}/${file}`]
-      : ['bash', '-c', `tsc /app/javascript/${folder}/${file} --outFile main.js && node /app/main.js`],
+      : ['bash', '-c', `tsc /app/javascript/${folder}/${file} --outFile javascript/${folder}/main.js && node javascript/${folder}/main.js`],
     AttachStdout: true,
     AttachStderr: true,
   };

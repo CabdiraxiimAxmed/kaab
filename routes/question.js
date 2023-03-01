@@ -19,7 +19,6 @@ router.get('/', async (req, res) => {
 
 router.get('/find/:id/:language', async(req, res) => {
   let { id, language } = req.params;
-  console.log({ id, language });
   try {
     const question = await client.query(
       `SELECT * FROM questions WHERE id='${id}'`
@@ -41,7 +40,6 @@ router.get('/find/:id/:language', async(req, res) => {
 
 const getJavascript = (file, folder, language) => {
   let codeFilePath;
-  console.log(language);
   if (language === 'javascript')
     codeFilePath = path.join( __dirname, `../exercises/javascript/${folder}/${file}.js`);
   else if (language === 'typescript')
