@@ -1,12 +1,14 @@
 import React, { useState, useEffect, } from 'react';
 import RemainingCountDown from './RemainingCountDown';
+import { useSelector } from 'react-redux';
+import { RootState } from '../app/store';
 import { FaJsSquare } from 'react-icons/fa';
 import { FaPython } from 'react-icons/fa';
 import QuestionText from './QuestionText';
 import Editor from './Editor';
 import Result from './Result';
 import { toast } from 'react-toastify';
-import { ProblemType, Languages } from '../routes/Problem';
+import { ProblemType } from '../routes/Problem';
 import { StartingTime, EndingTime } from '../routes/Competition';
 import axios from 'axios';
 
@@ -18,45 +20,48 @@ interface Props {
 }
 /* time took to complete */
 const CompetitionPage: React.FC<Props> = ({ startingTime, endingTime, question_id, competitionId }) => {
-  const [ userLanguage, setUserLanguage] = useState<string>('javascript');
-  const [problem, setProblem] = useState<ProblemType>({
-    languages: [{ file: '', code: '', srcPath: '', language: '', folder: '' }],
-    question: '',
-    id: 0,
-  });
+  const user = useSelector((state: RootState ) => state.user.value);
+  const [ userLanguage, setUserLanguage ] = useState<string>(user.username);
+  const [problem, setProblem] = useState<ProblemType>();
 
   useEffect(() => {
-    if(question_id){
-      axios.get(`/api/questions/find/${question_id}`)
+    if(question_id && user.default_language){
+      axios.get(`/api/questions/find/${question_id}/${user.default_language}`)
         .then(resp => {
           if (resp.data === 'error') {
             toast.error('Server Error');
             return;
           }
           setProblem(resp.data);
+          setUserLanguage(user.default_language);
         }) .catch(error => {
           toast.error(error.message);
         })
     }
   }, [])
-  const getDefaultCodeLanguage = (languages: Languages[]) => languages.find((language: Languages) => language.language === userLanguage);
-
-  let userDefaultLanguage: Languages | undefined = getDefaultCodeLanguage(problem.languages);
-
   const handleLanguageChange = (language: string): void => {
-    setUserLanguage(language);
+    axios.get(`/api/questions/find/${question_id}/${language}`)
+      .then(resp => {
+        if (resp.data === 'error') {
+          toast.error('Server Error');
+          return;
+        }
+        setProblem(resp.data);
+        setUserLanguage(language);
+      }) .catch(error => {
+        toast.error(error.message);
+      })
   }
 
   return (
     <div className='competition-page-container'>
       {endingTime && <RemainingCountDown endingTime={endingTime} />}
       <div className="question-editor-result-container">
-        {problem.question && <QuestionText questionText={problem.question} />}
-        {userDefaultLanguage?.code && (
+        {problem?.question && <QuestionText questionText={problem.question} />}
+        {problem?.code && (
           <div className='editor-container'>
             <div className='editor-header-container'>
-              <div className="dropdown">
-                <button className="dropBtn">
+              <div className="dropdown"> <button className="dropBtn">
                   luuqadaha
                 </button>
                 <div className="dropdown-content">
@@ -65,13 +70,13 @@ const CompetitionPage: React.FC<Props> = ({ startingTime, endingTime, question_i
                 </div>
               </div>
               <div className="file-name-container">
-                {userDefaultLanguage.file === 'sum.js' ? <FaJsSquare className="file-icon" /> : <FaPython className='file-icon' />} {userDefaultLanguage.file}
+                {problem.file === 'sum.js' ? <FaJsSquare className="file-icon" /> : <FaPython className='file-icon' />} {problem.file}
               </div>
             </div>
             <Editor
-              preWrittenCode={userDefaultLanguage.code}
-              file={userDefaultLanguage.file}
-              folder={userDefaultLanguage.folder}
+              preWrittenCode={problem.code}
+              file={problem.file}
+              folder={problem.folder}
               id={problem.id}
               language={userLanguage}
               startingTime={startingTime}

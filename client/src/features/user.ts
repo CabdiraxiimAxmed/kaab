@@ -5,6 +5,7 @@ interface UserType {
     name: string;
     username: string;
     email: string;
+    default_language: string;
   };
 }
 
@@ -13,6 +14,7 @@ const initialState: UserType = {
     name: '',
     username: '',
     email: '',
+    default_language: ''
   },
 };
 

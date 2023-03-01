@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../app/store';
 import QuestionText from '../Components/QuestionText';
 import { FaJsSquare } from 'react-icons/fa';
 import { FaPython } from 'react-icons/fa';
@@ -14,19 +16,16 @@ type SocketUsers = {
   socketId: string
 }
 
-type Languages = {
+type ProblemType = {
   file: string;
   code: string;
   srcPath: string;
   language: string;
   folder: string;
-
-}
-type ProblemType = {
-  languages: Languages[];
   question: string;
   id: number;
-};
+
+}
 
 type UserJoined = {
   username: string;
@@ -34,52 +33,36 @@ type UserJoined = {
   users: { username: string, socketId: string }[];
 }
 
-const SUPPORTED_LANGUAGES = ['javascript', 'python'];
 const Problem: React.FC = () => {
+  const user = useSelector((state: RootState) => state.user.value);
   const [userLanguage, setUserLanguage] = useState<string>('javascript');
   const [roomId, setRoomId] = useState<string>();
   const [socketUsers, setSocketUsers] = useState<SocketUsers[]>();
   const [isShared, setIshared] = useState<boolean>(false);
   const { socket } = useContext(SocketContext) as Value;
-  const [problem, setProblem] = useState<ProblemType>({
-    languages: [{ file: '', code: '', srcPath: '', language: '', folder: '' }],
-    question: '',
-    id: 0,
-  });
+  const [ problem, setProblem] = useState<ProblemType>()
 
   const { id } = useParams();
   useEffect(() => {
-    axios
-      .get(`/api/questions/find/${id}`)
-      .then(resp => {
-        if (resp.data == 'error') {
-          toast.error('SERVER: qalad ayaa dhacay');
-        } else if (resp.data == 'question-not-exist') {
-          toast.error('su,aasha lama helin');
-        } else {
-          setProblem(resp.data);
-        }
-      })
-      .catch(err => {
-        toast.error(err.message);
-      });
-  }, []);
-
-  const getDefaultCodeLanguage = (languages: Languages[], term: string) => languages.find((language: Languages) => language?.language === term);
-  let userDefaultLanguage: Languages= getDefaultCodeLanguage(problem.languages, userLanguage) || problem.languages[0];
-
-  const isSupported = ():{javascript: boolean; python: boolean} => {
-    let result = {javascript: false, python: false};
-    for(let language of SUPPORTED_LANGUAGES) {
-      let isSupported: Languages | undefined = getDefaultCodeLanguage(problem.languages, language);
-      if(isSupported) {
-        result = {...result, [language]: true};
-      } else {
-        result = {...result, [language]: false};
-      }
+    if(user.default_language) {
+      axios
+        .get(`/api/questions/find/${id}/${user.default_language}`)
+        .then(resp => {
+          if (resp.data == 'error') {
+            toast.error('SERVER: qalad ayaa dhacay');
+          } else if (resp.data == 'question-not-exist') {
+            toast.error('su,aasha lama helin');
+          } else {
+            setProblem(resp.data);
+            setUserLanguage(user.default_language);
+          }
+        })
+        .catch(err => {
+          toast.error(err.message);
+        });
     }
-    return result;
-  };
+  }, [user]);
+
 
   useEffect(() => {
     socket.on('users', (users: {users: SocketUsers[]}) => {
@@ -96,15 +79,25 @@ const Problem: React.FC = () => {
       // TODO: if the other one works delete this one.
       setRoomId(roomId);
       setIshared(true);
-      if (userDefaultLanguage?.code) {
-        let codeData = { language: userDefaultLanguage, question: problem.question, id: problem.id }
+      if (problem?.code) {
+        let codeData = { language: problem, question: problem.question, id: problem.id }
         socket.emit('shareCodeData', { roomId, codeData });
       }
     });
-  }, [socket, userDefaultLanguage]);
+  }, [socket, problem]);
 
   const handleLanguageChange = (language: string): void => {
-    setUserLanguage(language);
+    axios.get(`/api/questions/find/${id}/${language}`)
+      .then(resp => {
+        if (resp.data === 'error') {
+          toast.error("server error");
+          return;
+        }
+        setProblem(resp.data)
+        setUserLanguage(language);
+      }) .catch(error => {
+        toast.error(error.message);
+      })
   }
 
   return (
@@ -122,8 +115,8 @@ const Problem: React.FC = () => {
         theme="dark"
       />
       <div className="question-editor-result-container">
-        {problem.question && <QuestionText questionText={problem.question} />}
-        {userDefaultLanguage?.code && (
+        {problem?.question && <QuestionText questionText={problem.question} />}
+        {problem?.code && (
           <div className='editor-container'>
             <div className='editor-header-container'>
               <div className="dropdown">
@@ -132,18 +125,18 @@ const Problem: React.FC = () => {
                 </button>
                 <div className="dropdown-content">
                   <button
-                    disabled={!isSupported().javascript} className='language-change-button' onClick={() => handleLanguageChange('javascript')}> <FaJsSquare /> Javascript </button>
-                  <button disabled={!isSupported().python} className='language-change-button' onClick={() => handleLanguageChange('python')}> <FaPython /> Python </button>
+                    className='language-change-button' onClick={() => handleLanguageChange('javascript')}> <FaJsSquare /> Javascript </button>
+                  <button className='language-change-button' onClick={() => handleLanguageChange('python')}> <FaPython /> Python </button>
                 </div>
               </div>
               <div className="file-name-container">
-                {userDefaultLanguage.file === 'sum.js' ? <FaJsSquare className="file-icon" /> : <FaPython className='file-icon' />} {userDefaultLanguage.file}
+                {problem.file === 'sum.js' ? <FaJsSquare className="file-icon" /> : <FaPython className='file-icon' />} {problem.file}
               </div>
             </div>
             <Editor
-              preWrittenCode={userDefaultLanguage.code}
-              file={userDefaultLanguage.file}
-              folder={userDefaultLanguage.folder}
+              preWrittenCode={problem.code}
+              file={problem.file}
+              folder={problem.folder}
               id={problem.id}
               language={userLanguage}
               isCompetition={false}
@@ -160,4 +153,4 @@ const Problem: React.FC = () => {
 
 
 export default Problem;
-export type { ProblemType, Languages, SocketUsers };
+export type {  ProblemType, SocketUsers };

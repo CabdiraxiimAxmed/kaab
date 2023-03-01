@@ -10,7 +10,6 @@ let io;
 const socketConnection = server => {
   io = socket(server);
   io.on('connection', socket => {
-    console.log("user connected", socket.id);
     socket.emit('message', 'connected');
     // Running and testing javascript code here
     socket.on('runJavascriptCode', codeData => {

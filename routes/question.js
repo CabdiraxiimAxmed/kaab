@@ -38,6 +38,28 @@ router.get('/find/:id', async (req, res) => {
   }
 });
 
+router.get('/find/:id/:language', async(req, res) => {
+  let { id, language } = req.params;
+  console.log({ id, language });
+  try {
+    const question = await client.query(
+      `SELECT * FROM questions WHERE id='${id}'`
+    );
+    if (question.rowCount <= 0) {
+      res.send('question-not-exist');
+      return;
+    }
+    let { file, folder, id: questionId } = question.rows[0];
+    let questionText = getQuestion(file, folder);
+    if(language === 'javascript')
+      res.send({ ...getJavascript(file, folder), id, question: questionText })
+    else if(language === 'python')
+      res.send({ ...getPython(file, folder), id, question: questionText })
+  } catch(err) {
+    res.send('error');
+  }
+});
+
 const getJavascript = (file, folder) => {
   const codeFilePath = path.join(
     __dirname,

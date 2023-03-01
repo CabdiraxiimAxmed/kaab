@@ -53,12 +53,13 @@ router.get('/find/:username', async (req, res) => {
   const { username } = req.params;
   try {
     const user = await client.query(
-      `SELECT name, username, email FROM user_info WHERE username='${username}'`
+      `SELECT name, username, email, default_language FROM user_info WHERE username='${username}'`
     );
     res.send({
       name: user.rows[0].name,
       username: user.rows[0].username,
       email: user.rows[0].email,
+      default_language: user.rows[0].default_language,
     });
   } catch (err) {
     res.send('error');
