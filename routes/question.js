@@ -17,27 +17,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/find/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const question = await client.query(
-      `SELECT * FROM questions WHERE id='${id}'`
-    );
-    if (question.rowCount <= 0) {
-      res.send('question-not-exist');
-      return;
-    }
-    let { file, folder, id: questionId } = question.rows[0];
-    let javascript = getJavascript(file, folder, questionId);
-    let python = getPython(file, folder);
-    let questionText = getQuestion(file, folder)
-    res.send({languages: [javascript, python], question: questionText, id: questionId });
-  } catch (err) {
-    console.log(err);
-    res.send('error');
-  }
-});
-
 router.get('/find/:id/:language', async(req, res) => {
   let { id, language } = req.params;
   console.log({ id, language });
@@ -51,8 +30,8 @@ router.get('/find/:id/:language', async(req, res) => {
     }
     let { file, folder, id: questionId } = question.rows[0];
     let questionText = getQuestion(file, folder);
-    if(language === 'javascript')
-      res.send({ ...getJavascript(file, folder), id, question: questionText })
+    if(language === 'javascript' || language === 'typescript')
+      res.send({ ...getJavascript(file, folder, language), id, question: questionText })
     else if(language === 'python')
       res.send({ ...getPython(file, folder), id, question: questionText })
   } catch(err) {
@@ -60,13 +39,14 @@ router.get('/find/:id/:language', async(req, res) => {
   }
 });
 
-const getJavascript = (file, folder) => {
-  const codeFilePath = path.join(
-    __dirname,
-    `../exercises/javascript/${folder}/${file}.js`
-  );
-  const arePathsExist =
-    fs.existsSync(codeFilePath);
+const getJavascript = (file, folder, language) => {
+  let codeFilePath;
+  console.log(language);
+  if (language === 'javascript')
+    codeFilePath = path.join( __dirname, `../exercises/javascript/${folder}/${file}.js`);
+  else if (language === 'typescript')
+     codeFilePath = path.join( __dirname, `../exercises/javascript/${folder}/${file}.ts`);
+  const arePathsExist = fs.existsSync(codeFilePath);
   if (arePathsExist) {
     const srcPath = path.join(__dirname, `../exercises/javascript/${file}/${file}.tar`);
     const fileName = path.basename(codeFilePath);
@@ -74,7 +54,7 @@ const getJavascript = (file, folder) => {
     const folderName = path.basename(codeFilePath, extenname);
     const code = fs.readFileSync(codeFilePath, 'utf8');
     return {
-      language: 'javascript',
+      language,
       file: fileName,
       code,
       srcPath,

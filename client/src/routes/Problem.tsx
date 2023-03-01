@@ -124,8 +124,8 @@ const Problem: React.FC = () => {
                   luuqadaha
                 </button>
                 <div className="dropdown-content">
-                  <button
-                    className='language-change-button' onClick={() => handleLanguageChange('javascript')}> <FaJsSquare /> Javascript </button>
+                  <button className='language-change-button' onClick={() => handleLanguageChange('javascript')}> <FaJsSquare /> Javascript </button>
+                  <button className='language-change-button' onClick={() => handleLanguageChange('typescript')}> <FaPython /> Typescript </button>
                   <button className='language-change-button' onClick={() => handleLanguageChange('python')}> <FaPython /> Python </button>
                 </div>
               </div>

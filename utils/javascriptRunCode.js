@@ -101,9 +101,10 @@ EOF
 };
 
 const runCode = (container, codeData) => {
-  const { socket, file, folder } = codeData;
+  const { socket, language , file, folder } = codeData;
   let execWritingOptions = {
-    Cmd: ['bash', '-c', `node /app/javascript/${folder}/${file}`],
+    Cmd: language === 'javascript' ?['bash', '-c', `node /app/javascript/${folder}/${file}`]
+      : ['bash', '-c', `tsc /app/javascript/${folder}/${file} --outFile main.js && node /app/main.js`],
     AttachStdout: true,
     AttachStderr: true,
   };
