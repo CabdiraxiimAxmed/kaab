@@ -77,9 +77,13 @@ EOF
   });
 }
 function testCode(codeData, container) {
-  const { socket, questionId, isCompetition, startingTime, username, competitionId } = codeData;
+  const { socket, language, questionId, folder, file, isCompetition, startingTime, username, competitionId } = codeData;
+  let javascriptFile;
+  if (language === 'typescript')
+    javascriptFile = changeFileExtenstion(file)
   let execWritingOptions = {
-    Cmd: ['bash', '-c', 'cd javascript && jest --json'],
+    Cmd: language === 'javascript' ? ['bash', '-c', 'cd javascript && jest --json']
+      :['bash', '-c', `cd javascript/${folder} && rm ${javascriptFile} && tsc ${file} &&  jest --json`],
     AttachStdout: true,
     AttachStderr: true,
   };
@@ -190,4 +194,10 @@ const getErrorType = output => {
   }
   return 'none';
 };
+
+const changeFileExtenstion = (file) => {
+  let split = file.split('.')
+  return `${split[0]}.js`
+}
+
 module.exports = { javascriptTestCode };
