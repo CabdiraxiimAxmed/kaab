@@ -31,4 +31,36 @@ router.get('/info/:competitionId', async (req, res) => {
   }
 });
 
+router.post('/create', async(req, res) => {
+  let { startingTime, endingTime, startingDate, questionId } = req.body;
+  startingTime = JSON.stringify(getStartingTime(startingTime));
+  endingTime =  JSON.stringify(getEndingTime(endingTime));
+  try {
+    await client.query(`INSERT INTO competition (starting_time, ending_time, question_id, starting_date)
+        VALUES('${startingTime}', '${endingTime}', '${questionId}', '${startingDate}')`);
+    res.send('success');
+  } catch(err) {
+    res.send('error');
+  }
+});
+
+const getStartingTime = (startingTime) => {
+  let split = startingTime.split(' ');
+  let starting_hour = split[0];
+  let starting_minute = split[1];
+  let starting_second = split[2];
+  if (!starting_minute) starting_minute = 0;
+  if (!starting_second) starting_second = 0;
+  return { starting_hour, starting_minute, starting_second };
+};
+
+const getEndingTime = (endingTime) => {
+  let split = endingTime.split(' ');
+  let ending_hour = split[0];
+  let ending_minute = split[1];
+  let ending_second = split[2];
+  if (!ending_minute) ending_minute = 0;
+  if (!ending_second) ending_second = 0;
+  return { ending_hour, ending_minute, ending_second };
+};
 module.exports = router;

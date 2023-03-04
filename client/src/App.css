@@ -99,6 +99,10 @@
 .logo {
   font-size: 18px;
 }
+.menu {
+  display: flex;
+  justify-content: space-around;
+}
 .menu a {
   font-size: 18px;
 }
@@ -501,6 +505,17 @@ th {
   padding: 10px;
 }
 
+
+/* create competition file */
+.create-competition-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.create-competition-container div input {
+  margin: 5px 0;
+}
 
 
 /* Page not found file */

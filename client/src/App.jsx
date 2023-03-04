@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Singup from './routes/signup';
 import Login from './routes/login';
+import CreateCompetition from './routes/CreateCompetition'
 import Shared from './routes/Shared';
 import User from './routes/User';
 import PageNotFound from './routes/PageNotFound';
@@ -29,6 +30,7 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/home" element={<Home />} />
+          <Route path="/competition/create" element={<CreateCompetition />} />
           <Route path="/competition/:competitionId" element={<Competition />} />
           <Route path="/competitionInfo/:competitionId" element={<CompetitionInfo />} />
           <Route path="/share/:roomId" element={<Shared />} />

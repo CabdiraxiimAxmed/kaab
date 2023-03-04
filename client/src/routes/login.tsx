@@ -32,7 +32,7 @@ const Login: React.FC = () => {
     }
 
     axios
-      .post('api/users/signin', data)
+      .post('/api/users/signin', data)
       .then(resp => {
         if (typeof resp.data == 'object') {
           dispatch(setUser(resp.data));
