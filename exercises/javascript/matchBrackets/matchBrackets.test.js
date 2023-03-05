@@ -4,11 +4,11 @@ test("({[})]", () => {
   expect(maSimanYihiin("({[})]")).toBeTruthy;
 });
 test("{{{{{(((())))}}}}", () => {
-  expect(maSimanYihiin("{]{{{{(((())))}}}}[[]")).toBeTruthy;
+  expect(maSimanYihiin("{]{{{{(((())))}}}}[[]")).toBeFalsy;
 });
 test("(}){[]{}", () => {
   expect(maSimanYihiin("(}){[]{}")).toBeTruthy;
 });
 test("]]]()))}}}}{{{[[[", () => {
-  expect(maSimanYihiin("]]]()))}}}}{{{[[[")).toBeTruthy;
+  expect(maSimanYihiin("]]]()))}}}}{{{[[[")).toBeFalsy;
 });

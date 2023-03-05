@@ -1,0 +1,2 @@
+def weyneyXarfkaUguHoreeya(jumlad):
+    return ''
