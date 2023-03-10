@@ -1,4 +1,5 @@
 const express = require('express');
+const { v4: uuidv4 } = require('uuid');
 const client = require('../models/connect');
 const router = express.Router();
 
@@ -35,10 +36,11 @@ router.post('/create', async(req, res) => {
   let { startingTime, endingTime, startingDate, questionId } = req.body;
   startingTime = JSON.stringify(getStartingTime(startingTime));
   endingTime =  JSON.stringify(getEndingTime(endingTime));
+  let id  = uuidv4();
   try {
-    await client.query(`INSERT INTO competition (starting_time, ending_time, question_id, starting_date)
-        VALUES('${startingTime}', '${endingTime}', '${questionId}', '${startingDate}')`);
-    res.send('success');
+    await client.query(`INSERT INTO competition (id, starting_time, ending_time, question_id, starting_date)
+        VALUES('${id}','${startingTime}', '${endingTime}', '${questionId}', '${startingDate}')`);
+    res.send(id);
   } catch(err) {
     res.send('error');
   }

@@ -32,7 +32,7 @@ const CreateCompetition: React.FC = () => {
           toast.error('server error');
           return;
         }
-        toast.success('created');
+        toast.success(`id ga waa ${resp.data}`, {position: 'top-center', closeOnClick: false, autoClose: 100000, draggable: false} );
       }) .catch(error => {
         toast.error(error.message);
       })
