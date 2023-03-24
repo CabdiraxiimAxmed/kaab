@@ -11,6 +11,13 @@ const socketConnection = server => {
   io = socket(server);
   io.on('connection', socket => {
     socket.emit('message', 'connected');
+    socket.on('request-id', () => {
+      socket.emit("me", socket.id);
+    })
+    socket.on('stream', (stream) => {
+      console.log("getting stream");
+      console.log(stream);
+    })
     // Running and testing javascript code here
     socket.on('runJavascriptCode', codeData => {
       const { language } = codeData;
@@ -99,6 +106,15 @@ const socketConnection = server => {
     socket.on('typing', ({ isTyping, username, roomId}) => {
       socket.to(roomId).emit('typing', { isTyping, username })
     });
+
+    // video call section
+    socket.on('callUser', ({ userToCall, signalData,  from, name }) => {
+      io.to(userToCall).emit("callUser", { signal: signalData, from, name });
+    });
+    socket.on('answerCall', (data) => {
+      console.log('answering the call');
+      io.to(data.to).emit('callAccepted', data.signal);
+    })
 
     // if user disconnects.
     socket.on('disconnect', async() => {

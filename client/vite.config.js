@@ -15,5 +15,11 @@ export default defineConfig({
     },
     port: 5173,
   },
+  resolve: {
+    alias: {
+      // ...
+      "simple-peer": "simple-peer/simplepeer.min.js",
+    },
+  },
   plugins: [react()],
 });
