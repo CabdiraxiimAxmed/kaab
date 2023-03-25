@@ -25,7 +25,7 @@ const Context: React.FC<Props> = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState<boolean>(false);
   const [call, setCall] = useState<any>({});
   const [userStream, setUserStream] = useState<any>(null);
-  const [isAudioAvailable, setIsAudioAvailable] = useState<boolean>(true)
+  const [isAudioAvailable, setIsAudioAvailable] = useState<boolean>(false)
   const [isVideoAvailable, setIsVideoAvailable] = useState<boolean>(true)
   let socket = io('http://localhost:2321/', {
     transports: ['websocket'],
@@ -43,7 +43,7 @@ const Context: React.FC<Props> = ({ children }) => {
     setMyStream(null);
     if (isAudioAvailable || isVideoAvailable) {
       navigator.mediaDevices
-        .getUserMedia({ video: isVideoAvailable, audio: isAudioAvailable })
+        .getDisplayMedia({ video: isVideoAvailable, audio: isAudioAvailable })
         .then(currentStream => {
           if (isVideoAvailable) {
             setMyStream(currentStream);
