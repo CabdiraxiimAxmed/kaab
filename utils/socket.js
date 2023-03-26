@@ -10,13 +10,8 @@ let io;
 const socketConnection = server => {
   io = socket(server);
   io.on('connection', socket => {
-    socket.emit('message', 'connected');
     socket.on('request-id', () => {
       socket.emit("me", socket.id);
-    })
-    socket.on('stream', (stream) => {
-      console.log("getting stream");
-      console.log(stream);
     })
     // Running and testing javascript code here
     socket.on('runJavascriptCode', codeData => {
