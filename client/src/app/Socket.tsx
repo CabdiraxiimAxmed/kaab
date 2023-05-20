@@ -43,7 +43,7 @@ const Context: React.FC<Props> = ({ children }) => {
     setMyStream(null);
     if (isAudioAvailable || isVideoAvailable) {
       navigator.mediaDevices
-        .getDisplayMedia({ video: isVideoAvailable, audio: isAudioAvailable })
+        .getUserMedia({ video: isVideoAvailable, audio: isAudioAvailable })
         .then(currentStream => {
           if (isVideoAvailable) {
             setMyStream(currentStream);

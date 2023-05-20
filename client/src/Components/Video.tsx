@@ -7,6 +7,7 @@ import { SocketContext, Value } from '../app/Socket';
 const Video: React.FC = () => {
   const [myId, setMyId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
+  const [videoDisabled, setVideoDisabled] = useState<boolean>(false);
   const { socket, myStream, userStream ,  callUser, call, callAccepted, answerCall } = useContext(SocketContext) as Value;
   const showNotification = call.isReceivingCall && !callAccepted;
   let myVideo: any = useRef();
@@ -28,6 +29,13 @@ const Video: React.FC = () => {
     }
   }, [userVideo, userStream])
 
+  const disableVideo = () => {
+    console.log("disabling the video");
+    myVideo.current.srcObject = videoDisabled ? myStream : null;
+    setVideoDisabled(!videoDisabled);
+  }
+  console.log(videoDisabled)
+
   return (
     <>
       {showNotification && 
@@ -40,7 +48,7 @@ const Video: React.FC = () => {
           <div className='video-inner-wrapper'>
             <div className='video-tools-container'>
               <video className='user-video' width='240px' ref={myVideo} autoPlay playsInline controls={false} />
-              <button className='video-btn'><FaVideo /></button>
+              <button onClick={disableVideo} className='video-btn'><FaVideo /></button>
             </div>
             {userStream && <video className='user-video' width='240px' ref={userVideo} autoPlay playsInline controls={false} />}
           </div>
