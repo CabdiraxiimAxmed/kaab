@@ -10,7 +10,6 @@ client.connect();
 socketConnection(server);
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
 // import routes
 const user = require('./routes/user');
